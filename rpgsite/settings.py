@@ -220,7 +220,7 @@ if EMAIL_USE_CONFIG_FILE:
             del config, section
     except Exception as e:
         print('Email config ini was not loaded correctly!')
-		print(repr(e))
+        print(repr(e))
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
