@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		{% block charset %}
+		<meta charset="utf-8">
+		{% endblock %}
+
+		{% block metadata %}
+		<meta name="description" content="RPGSite">
+		<meta name="author" content="Caday">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		{% endblock %}
+
+        <title>{% block title %}RPGSite{% endblock %}</title>
+
+        {% block styles %}
+		{% link_static_css 'libs/bootstrap/3.3.7/css/bootstrap.min.css' %}
+		{% link_static_css 'libs/bootstrap/3.3.7/css/bootstrap-theme.min.css' %}
+		{% link_static_css 'libs/bootstrap-datetimepicker/4.17.45/css/bootstrap-datetimepicker.min.css' %}
+		{% link_static_css 'css/rpgsite.css' %}
+		{% endblock %}
+
+		{% block icons %}
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'icons/rpgsite.ico' %}">
+		{% endblock %}
+    </head>
+    <body>
+		{% block scripts %}
+		{% link_static_js 'libs/jquery/3.1.1/js/jquery-3.1.1.min.js' %}
+		{% link_static_js 'libs/moment/2.17.1/js/moment-with-locales.min.js' %}
+		{% link_static_js 'libs/bootstrap/3.3.7/js/bootstrap.min.js' %}
+		{% link_static_js 'libs/bootstrap-datetimepicker/4.17.45/js/bootstrap-datetimepicker.min.js' %}
+		{% link_static_js 'js/rpgsite.js' %}
+		{% endblock %}
+
+    	<div id="base-container">
+	    	<div id="main-container">
+	    	
+				<div id="section-1">
+				
+		            <div id="logo-container">
+				    	<div id="logo">
+		                    <a id="logo-link" href="{% url 'index' %}"></a>
+				    	</div>
+			    	</div>
+					
+					<div id="navigation">
+						<div id="navigation-wrapper">
+							<div class="navigation-item">
+								<a class="navigation-link" href="{% url 'index' %}">
+									Main page
+								</a>
+							</div>
+	
+							<div class="navigation-item">
+								<a class="navigation-link" href="{% url 'accounts:create' %}">
+									Create account
+								</a>
+							</div>
+	
+							<div class="navigation-item">
+								<a class="navigation-link" href="{% url 'accounts:profile' %}">
+									Profile
+								</a>
+							</div>
+	
+							<div class="navigation-item">
+								<a class="navigation-link" href="{% url 'admin:index' %}">
+									Administration
+								</a>
+							</div>
+							
+							<div id="navigation-end"></div>
+						</div>
+					</div>
+
+				</div>
+				
+				<div id="section-2">
+
+					<div id="user-info">
+					
+						<div id="user-info-1">
+							<a href="{% url 'accounts:profile' %}">
+							{% if user.is_authenticated %}
+								<img id="user-info-avatar-image" src="{% static 'images/avatar.jpg' %}">
+							{% else %}
+								<img id="user-info-avatar-image" src="{% static 'images/no-avatar.jpg' %}">
+							{% endif %}
+							</a>
+						</div>
+
+						<div id="user-info-2">
+							{% if user.is_authenticated %}
+								<p id="user-info-who">
+									<span id="user-info-who-label">User:</span>
+
+									{% if user.is_superuser %}
+										<a id="user-info-name-admin" href="{% url 'admin:index' %}">{{ user.username }}</a>
+									{% else %}
+										<span id="user-info-name">{{ user.username }}</span>
+									{% endif %}
+								</p>
+
+								<a id="user-logout-link" href="{% url 'accounts:logout' %}">
+									<input id="user-logout" type="button" class="btn btn-default btn-sm" value="Logout">
+								</a>
+							{% else %}
+								<p id="user-info-not-logged">
+									<span id="user-info-who-label">Not logged in.</span>
+								</p>
+
+								<a id="user-login-link" href="{% url 'accounts:login' %}">
+									<input id="user-login" type="button" class="btn btn-primary btn-sm" value="Login">
+								</a>
+							{% endif %}
+						</div>
+
+					</div>
+					
+					<div id="section-3">
+										
+						<div id="content">
+							<div id="content-title-container">
+								<div id="content-title">
+									{% filter title %}
+									{% block content-title %}RPGSite{% endblock %}
+									{% endfilter %}
+								</div>
+							</div>
+	
+							<div id="content-final">
+								{% block content %}{% endblock %}
+							</div>
+						</div>
+						
+					</div>
+					
+	    		</div>
+					
+	            <div id="footer">
+					<div id="footer-wrapper">
+						{% block footer %}
+						<span class="glyphicon glyphicon-copyright-mark" aria-hidden="true"></span>
+						<span>2017 by <a href="#">Caday</a>.</span>
+						<span>All rights reserved.</span>
+						<span>Powered by <a href="https://www.djangoproject.com/">Django</a>.</span>
+						{% endblock %}
+					</div>
+		    	</div>
+		    	
+	    	</div>
+	    </div>
+    </body>
+</html>

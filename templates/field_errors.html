@@ -1,0 +1,7 @@
+{% if field.errors %}
+    <ul class="field-error-list list-group">
+    {% for error in field.errors %}
+        <li class="list-group-item">{{ error | escape | linebreaksbr }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}

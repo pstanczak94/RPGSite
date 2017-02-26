@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content-title %}
+	Main page
+{% endblock %}
+
+{% block content %}
+	<h1>Welcome to RPGSite!</h1>
+	<h2>If you're new you can <a href="{% url 'accounts:create' %}">create account</a> {% emoji 'sunglasses' %}</h2>
+{% endblock %}

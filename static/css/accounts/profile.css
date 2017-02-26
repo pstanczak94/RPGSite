@@ -1,0 +1,47 @@
+:root {
+	--section-margin: 20px;
+}
+
+#email-not-configured { color: brown; font-weight: bold; }
+#email-not-activated { color: red; }
+#email-activated { color: green; }
+
+p { margin-bottom: 10px; }
+h1 { margin-top: 10px; margin-bottom: 20px; }
+
+.profile-table { width: 100%; }
+
+#profile-td-1 {
+	min-width: 200px;
+	max-width: 250px;
+	text-align: left;
+	border-right: 1px solid darkgray;
+	padding-right: var(--section-margin);
+}
+
+#profile-td-2 {
+	padding-left: var(--section-margin);
+}
+
+.characters-table {
+	background-color: white;
+}
+
+.characters-tr > td {
+	text-align: left;
+}
+
+#delete-character-link:link, #delete-character-link:visited {
+	color: red;
+	text-decoration: none;
+	text-shadow: 1px 1px 1px black;
+}
+
+#delete-character-link:hover, #delete-character-link:active {
+	color: maroon;
+	text-decoration: none;
+}
+
+.emoji {
+	height: 2em;
+}

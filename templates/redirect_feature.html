@@ -1,0 +1,6 @@
+{% if next %}
+    <div class="next-page-info">
+        Redirecting to <code id="next-page-url">{{ next }}</code> in
+        <strong id="next-page-seconds">{% firstof next_sec 3 %}</strong>...
+    </div>
+{% endif %}

@@ -1,0 +1,5 @@
+#content-final { margin: 0 auto; max-width: 500px; }
+#content-final .help-block { text-align: left; margin-left: 5px; font-size: 12px; }
+#content-final hr { border-width: 2px; }
+#content-final input[type=submit] { padding: 5px 30px; }
+#content-final td { padding-left: 5px; }

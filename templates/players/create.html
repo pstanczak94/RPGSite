@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content-title %}
+	{{ view.get_title }}
+{% endblock %}
+
+{% block content %}
+	{% link_static_css 'css/players/create.css' %}
+	
+	{% if view.is_success %}
+		<div class="text-center">
+			<h2>Character '{{ name }}' created!</h2>
+			<h2>Click <a href="{% url 'accounts:profile' %}">here</a> to go to profile.</h2>
+		</div>
+	{% else %}
+		{% include 'form_errors.html' %}
+		
+		<script>
+			$(document).ready(function() {
+				//$('input[type=text]').addClass('form-control');
+				//$('label').addClass('control-label');
+				
+				{% if form.corrected_name %}
+					$('input[name=name]').val('{{ form.corrected_name }}');
+				{% endif %}
+			});
+		</script>
+
+		<form action="{% url 'players:create' %}" method="post">
+			{% csrf_token %}
+			
+			<table>
+				{% for field in form.visible_fields %}
+					<tr>
+						<th>{{ field.label_tag }}</td>
+						<td>{{ field }}</td>
+					</tr>
+					{% if field.errors %}
+						<tr><td class="errortd" colspan="2">{% include 'field_errors.html' %}</td></tr>
+					{% endif %}
+				{% endfor %}
+			</table>
+			
+			<input class="btn btn-success" type="submit" value="Create character">
+		</form>
+	{% endif %}
+{% endblock %}

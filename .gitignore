@@ -45,3 +45,14 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# ------------
+
+.idea/
+.settings/
+.project
+.pydevproject
+secret/
+__pycache__
+*.pyc
+

@@ -1,0 +1,16 @@
+{% if form.is_bound and not form.is_valid %}
+    <ul class="form-error-list list-group">
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <li class="list-group-item">{{ error | escape | linebreaksbr }}</li>
+        {% endfor %}
+    {% endif %}
+    {% for field in form.visible_fields %}
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <li class="list-group-item">{{ error | escape | linebreaksbr }}</li>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endif %}

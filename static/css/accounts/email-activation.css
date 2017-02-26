@@ -1,0 +1,23 @@
+#content-final {
+	margin: 0 auto;
+	max-width: 500px;
+}
+
+.help-block {
+	text-align: left;
+	margin-left: 20px;
+	font-size: 12px;
+}
+
+.help-text {
+	margin-left: 5px;
+}
+
+hr {
+	border-width: 2px;
+}
+
+#username-block code {
+	font-size: 16px;
+	padding: 5px 15px;
+}

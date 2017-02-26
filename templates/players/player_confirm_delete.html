@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content-title %}
+	Delete character
+{% endblock %}
+
+{% block content %}
+	{% link_static_css 'css/players/player_confirm_delete.css' %}
+	
+	<form action="" method="post">
+		{% csrf_token %}
+		
+	    <p>Are you sure you want to delete this character? {% emoji 'cry' %}</p>
+	    
+	    <h2>
+	    	<code><strong>Character:</strong> {{ object.name }}</code><br><br>
+	    	<code><strong>Level:</strong> {{ object.level }}</code>
+	    	<code><strong>Vocation:</strong> {{ object.get_vocation_display }}</code>
+	    </h2>
+	    
+	    <br>
+	    
+	    <input class="btn btn-sm btn-danger" type="submit" value="Delete character" />
+	</form>
+{% endblock %}

@@ -1,0 +1,11 @@
+#content-final { margin: 0 auto; max-width: 500px; }
+#content-final table { border-collapse: collapse; margin: 0 auto; margin-bottom: 20px; }
+#content-final table td { vertical-align: middle; padding: 5px; }
+#content-final table td:nth-child(1) { text-align: right; }
+#content-final table td:nth-child(2) { text-align: left; }
+#content-final .control-label { margin: 0; }
+#content-final .form-control { width: 230px; }
+#content-final input[type=submit] { padding: 5px 30px; }
+#content-final .need-login-error-list li {
+    font-family: Consolas, Verdana, sans-serif; font-size: 16px; color: blue;
+}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content-title %}
+	{{ view.get_title }}
+{% endblock %}
+
+{% block content %}
+	{% link_static_css 'css/accounts/email-activation.css' %}
+
+	{% if view.is_success %}
+		<h2>Email has been verified!</h2>
+		<br/>
+		{% include 'redirect_feature.html' with next_sec=5 %}
+	{% else %}
+		{% if user.email_activated %}
+			<h2>Your email is already activated.</h2>
+			<h3><a href="{% url 'accounts:profile' %}">Get me back to profile.</a></h3>
+		{% else %}
+			{% include 'full_form_errors.html' %}
+
+			<div id="username-block">
+				<code><strong>Username:</strong> {{ form.username.value }}</code>
+			</div>
+
+			<br>
+
+			<form action="{% url 'accounts:email-activation' %}" method="post">
+				{% csrf_token %}
+
+				{{ form.username }}
+				
+				<div class="form-group">
+					{{ form.activation_key | bootstrap_label }}
+					{{ form.activation_key | bootstrap_input }}
+					<p class="help-block">
+						<span class="glyphicon glyphicon-info-sign"></span>
+						{{ form.activation_key.help_text | safe }}
+					</p>
+				</div>
+
+				<input class="btn btn-success" type="submit" value="Submit verification key">
+			</form>
+		{% endif %}
+	{% endif %}
+{% endblock %}

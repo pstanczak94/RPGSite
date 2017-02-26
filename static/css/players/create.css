@@ -1,0 +1,76 @@
+table {
+	border-collapse: collapse;
+	border-radius: 10px;
+	overflow: hidden;
+	margin: 0 auto;
+	margin-bottom: 20px;
+	box-shadow: 0 0 10px gray;
+	max-width: 80%;
+}
+
+th, td {
+	padding: 10px;
+}
+
+.errortd {
+	padding: 0px;
+}
+
+.errortd .field-error-list {
+	margin: 0px; padding: 0px;
+}
+
+.errortd .field-error-list li {
+	color: red;
+	border-radius: 0px;
+	border: 2px solid blue;
+	background-color: rgb(200, 200, 255);
+}
+
+th {
+	vertical-align: top;
+	text-align: right;
+	padding-left: 30px;
+	color: rgba(0, 0, 255, 0.8);
+	background-color: rgba(255, 255, 0, 0.25);
+}
+
+td {
+	vertical-align: middle;
+	text-align: left;
+	padding-right: 30px;
+	background-color: rgba(0, 255, 0, 0.1);
+}
+
+tr:nth-child(1) th {
+	vertical-align: middle;
+}
+
+tr:not(:first-child) {
+	border-top: 1px solid gray;
+}
+
+label {
+	margin: 0;
+	font-family: Comic Sans MS, Verdana, sans-serif;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+li {
+	color: rgba(250, 50, 0, 0.8);
+}
+
+li:not(:last-child) {
+	padding-bottom: 6px;
+}
+
+input[type=submit] {
+	padding: 5px 30px;
+}

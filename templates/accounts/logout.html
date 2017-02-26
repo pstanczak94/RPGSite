@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content-title %}
+	{{ view.get_title }}
+{% endblock %}
+
+{% block content %}
+	{% if view.is_success %}
+		<h2>You've logged out!</h2>
+		<br/>
+		{% include 'redirect_feature.html' %}
+	{% else %}
+		<h1>You're not logged in.</h1>
+		<h2>Click <a href="{% url 'accounts:login' %}">here</a> to login.</h2>
+	{% endif %}
+{% endblock %}

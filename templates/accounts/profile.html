@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content-title %}
+	Profile
+{% endblock %}
+
+{% block content %}
+	{% link_static_css 'css/accounts/profile.css' %}
+	
+	<table class="profile-table">
+		<tr class="profile-tr">
+			<td id="profile-td-1">
+				<h1 class="text-center">Information</h1>
+				
+				<p><strong>Username:</strong> {{ account.username }}</p>
+			
+				{% if account.has_full_name %}
+					<p><strong>Full name:</strong> {{ account.get_full_name }}</p>
+				{% endif %}
+				
+				{% if account.email %}
+					<p><strong>Email:</strong> {{ account.email }}</p>
+					<p>
+					{% if not account.email_activated %}
+						{% emoji 'exclamation' %}
+						<a id="email-not-activated" 
+							href="{% url 'accounts:email-activation' %}">Email is not activated</a>
+						{% emoji 'exclamation' %}
+					{% else %}
+						<span id="email-activated">Email is activated.</span>
+					{% endif %}
+					</p>
+				{% else %}
+					<p id="email-not-configured">Email is not configured.</p>
+				{% endif %}
+			</td>
+			<td id="profile-td-2">
+				<div class="text-center">
+					<h1>List of characters</h1>
+					
+					<table class="table table-striped table-hover characters-table">
+						<tr>
+							<th>Name</th>
+							<th>Vocation</th>
+							<th>Level</th>
+							<th></th>
+						</tr>
+						{% for player in players %}
+							<tr id="character-{{ forloop.counter }}" class="characters-tr">
+								<td title="
+									{% if player.guild %}
+										Guild: {{ player.guild.name }}
+									{% endif %}
+									{% if player.house_owner %}
+										House: {{ player.house_owner.name }}
+									{% endif %}
+								">{{ player.name }}</td>
+								<td>{{ player.get_vocation_display }}</td>
+								<td>{{ player.level }}</td>
+								<td><a 	id="delete-character-link"
+										class="glyphicon glyphicon-remove" 
+										href="{% url 'players:delete' player.pk %}" 
+										title="Delete character"></a></td>
+							</tr>
+						{% empty %}
+							<tr><td colspan="4">&nbsp;</td></tr>
+						{% endfor %}
+					</table>
+					
+					<p>Characters count: <strong>{{ players_count }} / {{ players_max }}</strong></p>
+				
+					<a 	class="btn btn-success{% if not can_add_player %} disabled {% endif %}" 
+						href="{% url 'players:create' %}">Create character</a>
+				</div>
+			</td>
+		</tr>
+	</table>
+	
+	<hr>
+
+	<a href="{% url 'accounts:password' %}">
+		<input type="button" class="btn btn-primary" value="Change password" />
+	</a>
+{% endblock %}
