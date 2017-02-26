@@ -1,7 +1,7 @@
 
 	Projekt RPGSite
 
-1. Jakie biblioteki zosta³y u¿yte?
+1. Jakie biblioteki zostaÅ‚y uÅ¼yte?
 
 	- Django (1.11b1)
 	- django-emoji (2.2.0)
@@ -15,16 +15,16 @@
 
 	Python 3.6.0 [32 bit]
 
-2. Jak stworzyæ bazê danych MySQL?
+2. Jak stworzyÄ‡ bazÄ™ danych MySQL?
 
 	DROP DATABASE IF EXISTS `rpgsite`;
 	CREATE DATABASE `rpgsite` DEFAULT CHAR SET utf8;
 
-3. Jak uruchomiæ serwer?
+3. Jak uruchomiÄ‡ serwer?
 
 	Dodanie pythona do PATH:
 	
-	set PATH_TO_PYTHON=<tutaj œcie¿ka do folderu pythona>
+	set PATH_TO_PYTHON=<tutaj Å›cieÅ¼ka do folderu pythona>
 	set PATH=%PATH_TO_PYTHON%\Scripts;%PATH_TO_PYTHON%;%PATH%
 	
 	Uruchomienie serwera:
@@ -34,7 +34,7 @@
 	(python.exe/py.exe) manage.py collectstatic
 	(python.exe/py.exe) manage.py runserver 0.0.0.0:80
 
-4. Jak uruchomiæ wiersz poleceñ MySQL?
+4. Jak uruchomiÄ‡ wiersz poleceÅ„ MySQL?
 
 	set PATH_TO_MYSQL=C:\Program Files\MySQL\MySQL Server 5.7\bin
 	set PATH=%PATH_TO_MYSQL%;%PATH%
