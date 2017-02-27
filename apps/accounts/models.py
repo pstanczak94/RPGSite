@@ -21,24 +21,30 @@ class AccountManager(auth_models.UserManager):
         kwargs = CaseInsensitiveKwargs(self.model.USERNAME_FIELD, **kwargs)
         return super(AccountManager, self).get(**kwargs)
 
+    def get_by_natural_key(self, username):
+        return self.get(**{self.model.USERNAME_FIELD + '__iexact': username})
+
     def username_exists(self, username):
         return self.get_queryset().filter(username__iexact=username).exists()
 
     def email_exists(self, email):
         return self.get_queryset().filter(email__iexact=email).exists()
 
-    def create_account(self, username, password=None, email=None):
-        try:
-            account = self.create_user(username, email=email, password=password)
+    def _create_user(self, username, email, password, **extra_fields):
+        account = super(AccountManager, self)._create_user(username, email, password, **extra_fields)
+
+        if account.email:
             account.init_email_verification()
-        except Exception as e:
-            LogError(repr(e))
-            return None
-        else:
-            return account
+
+        return account
 
 class Account(auth_models.AbstractUser):
-    
+
+    class Meta:
+        db_table = 'accounts'
+        verbose_name = _('account')
+        verbose_name_plural = _('accounts')
+
     objects = AccountManager()
 
     full_name = models.CharField(
@@ -47,18 +53,6 @@ class Account(auth_models.AbstractUser):
         default = '',
         blank = True,
     )
-
-    # blocked = models.BooleanField(
-    #     _('blocked'),
-    #     default = False,
-    #     help_text = _('Designates whether this user is blocked.'),
-    # )
-    #
-    # warned = models.BooleanField(
-    #     _('warned'),
-    #     default = False,
-    #     help_text = _('Designates whether this user was warned.'),
-    # )
 
     email_activated = models.BooleanField(
         _('email activated'),
@@ -77,11 +71,6 @@ class Account(auth_models.AbstractUser):
         null = True,
         blank = True,
     )
-
-    class Meta:
-        db_table = 'accounts'
-        verbose_name = _('account')
-        verbose_name_plural = _('accounts')
 
     def __str__(self):
         return self.username
@@ -144,6 +133,7 @@ class Account(auth_models.AbstractUser):
         self.save()
 
 class AccountGroup(auth_models.Group):
+
     class Meta:
         proxy = True
         verbose_name = _('group')

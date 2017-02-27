@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 
-
 class ServerConfig(AppConfig):
-    name = 'server'
+    name = 'apps.server'
+    label = 'server'
+    verbose_name = 'Server'

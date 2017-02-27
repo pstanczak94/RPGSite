@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 
-
 class GuildsConfig(AppConfig):
-    name = 'guilds'
+    name = 'apps.guilds'
+    label = 'guilds'
+    verbose_name = 'Guilds'

@@ -1,6 +1,9 @@
 from django import forms
+from django.forms.widgets import TextInput
 
 def extend_kwargs(**kwargs):
+
+    kwargs.setdefault('widget', TextInput())
 
     if 'placeholder' in kwargs.keys():
         placeholder = kwargs.pop('placeholder')
@@ -53,4 +56,12 @@ class AutoFocusFormMixin(object):
         self.set_autofocus(field_to_focus)
         self.add_error(None, message)
 
+# Extended widgets
 
+class BootstrapTextInput(TextInput):
+    def __init__(self, attrs=None):
+        super(BootstrapTextInput, self).__init__(attrs)
+        if 'class' in self.attrs:
+            self.attrs['class'] += ' form-control'
+        else:
+            self.attrs['class'] = 'form-control'

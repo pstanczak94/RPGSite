@@ -52,7 +52,8 @@ class Guild(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+    @property
     def get_owner_name(self):
         return self.owner.name if self.owner else 'nobody'
 

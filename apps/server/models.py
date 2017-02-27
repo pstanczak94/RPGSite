@@ -85,8 +85,8 @@ class IPAddressBan(AbstractBan):
     
     class Meta:
         db_table = 'ip_bans'
-        verbose_name_plural = 'IP Address bans'
-        verbose_name = 'IP Address ban'
+        verbose_name_plural = 'IP address bans'
+        verbose_name = 'IP address ban'
 
 class Storage(models.Model):
     

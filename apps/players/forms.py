@@ -6,16 +6,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import title as format_title
 from apps.players.models import Player
 from django.forms.widgets import RadioSelect, TextInput
-from apps.tools.forms import CharField
+from apps.tools.forms import CharField, BootstrapTextInput
 from django.core.validators import RegexValidator
-
-class BootstrapTextInput(TextInput):
-    def __init__(self, attrs=None):
-        super(BootstrapTextInput, self).__init__(attrs)
-        if 'class' in self.attrs:
-            self.attrs['class'] += ' form-control'
-        else:
-            self.attrs['class'] = 'form-control'
 
 def character_name_fixer(name):
     name = name.strip()
@@ -45,7 +37,6 @@ class CreateForm(forms.ModelForm):
                 'invalid-name'
             )
         ],
-        widget = BootstrapTextInput(),
     )
         
     def clean(self):
@@ -56,6 +47,10 @@ class CreateForm(forms.ModelForm):
         
         name = data.get('name')
 
+        if not self.account.can_add_character:
+            self.add_error(None, _('You can\'t create more characters.'))
+            return data
+
         fixed_name = character_name_fixer(name)
         
         if name != fixed_name:
@@ -65,23 +60,10 @@ class CreateForm(forms.ModelForm):
             ))
             self.corrected_name = fixed_name
             return data
-        
-        if not self.account.can_add_character:
-            self.add_error(None, _('You can\'t create more characters.'))
-            return data
-        
-        if Player.objects.filter(name=fixed_name).exists():
+
+        if Player.objects.name_exists(fixed_name):
             self.add_error('name', _('That name is already beign used.'))
             return data
         
         return data
-
-
-
-
-
-
-
-
-
 

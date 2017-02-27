@@ -16,16 +16,16 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "rpgsite.settings")
 application = get_wsgi_application()
 
 from apps.accounts.models import Account
-from apps.tools import tools
+from apps.tools.tools import LogError, LogInfo
 
 if not Account.objects.username_exists('root'):
     try:
         Account.objects.create_superuser(
             username = 'root',
-            email = 'root@rpgsite.pl',
-            password = 'rpgsite'
+            password = 'rpgsite',
+            email = '',
         )
-    except:
-        tools.LogError('Root user creation failed.')
+    except Exception as e:
+        LogError('Root user creation error: ' + repr(e))
     else:
-        tools.LogInfo('Root user was created.')
+        LogInfo('Root user was created.')

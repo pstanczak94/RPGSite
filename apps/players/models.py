@@ -25,6 +25,12 @@ class PlayerManager(models.Manager):
     def get(self, **kwargs):
         kwargs = CaseInsensitiveKwargs('name', **kwargs)
         return super(PlayerManager, self).get(**kwargs)
+
+    def get_by_natural_key(self, name):
+        return self.get(name__iexact=name)
+
+    def name_exists(self, name):
+        return self.get_queryset().filter(name__iexact=name).exists()
     
 class Player(models.Model):
     
@@ -303,8 +309,8 @@ class PlayerVipList(models.Model):
     class Meta:
         db_table = 'player_viplist'
         unique_together = ['player', 'vip_player']
-        verbose_name = _('vip list')
-        verbose_name_plural = _('vip lists')
+        verbose_name = _('VIP list')
+        verbose_name_plural = _('VIP lists')
 
     def __str__(self):
         return '%s -> %s' % (

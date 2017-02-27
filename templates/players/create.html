@@ -14,17 +14,14 @@
 		</div>
 	{% else %}
 		{% include 'form_errors.html' %}
-		
+
+		{% if form.corrected_name %}
 		<script>
 			$(document).ready(function() {
-				//$('input[type=text]').addClass('form-control');
-				//$('label').addClass('control-label');
-				
-				{% if form.corrected_name %}
-					$('input[name=name]').val('{{ form.corrected_name }}');
-				{% endif %}
+				$('#id_name').val('{{ form.corrected_name }}');
 			});
 		</script>
+		{% endif %}
 
 		<form action="{% url 'players:create' %}" method="post">
 			{% csrf_token %}
@@ -32,8 +29,8 @@
 			<table>
 				{% for field in form.visible_fields %}
 					<tr>
-						<th>{{ field.label_tag }}</td>
-						<td>{{ field }}</td>
+						<th>{{ field | bootstrap_label }}</td>
+						<td>{{ field | bootstrap_input }}</td>
 					</tr>
 					{% if field.errors %}
 						<tr><td class="errortd" colspan="2">{% include 'field_errors.html' %}</td></tr>
