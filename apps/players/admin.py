@@ -10,28 +10,40 @@ from apps.accounts.models import Account
 from django.conf import settings
 
 class PlayerForm(forms.ModelForm):
-    
-    def clean(self):
-        data = super(PlayerForm, self).clean()
-        if self.is_valid() and self.is_add_form:
-            acc = Account.objects.get_by_natural_key(data['account'])
-            if not acc.can_add_character:
-                self.add_error('account', _('One account can only contain %d players.' % (settings.MAX_PLAYERS_PER_ACCOUNT)))
-        return data
-    
+
     class Meta:
         model = Player
-        exclude = []
+        fields = '__all__'
+
+class PlayerAddForm(forms.ModelForm):
+
+    def clean(self):
+        data = super(PlayerAddForm, self).clean()
+
+        if self.is_valid():
+            account = Account.objects.get_by_natural_key(data['account'])
+            if not account.can_add_character:
+                self.add_error('account', _(
+                    'One account can only contain %(num)d players.'
+                ) % {
+                    'num': settings.MAX_PLAYERS_PER_ACCOUNT,
+                })
+
+        return data
+
+    class Meta:
+        model = Player
+        fields = ['account', 'group', 'name', 'sex', 'vocation', 'town']
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
-    
+
     def get_form(self, request, obj=None, **kwargs):
-        form = super(PlayerAdmin, self).get_form(request, obj=obj, **kwargs)
-        form.is_add_form = obj is None
-        return form
-    
-    form = PlayerForm
+        self.form = self.change_form if obj else self.add_form
+        return super(PlayerAdmin, self).get_form(request, obj, **kwargs)
+
+    add_form = PlayerAddForm
+    change_form = PlayerForm
     
     list_display = (
         'name', 'account', 'level', 'vocation', 'sex', 'created'

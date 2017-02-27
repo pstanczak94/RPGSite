@@ -12,8 +12,8 @@ h1 { margin-top: 10px; margin-bottom: 20px; }
 .profile-table { width: 100%; }
 
 #profile-td-1 {
-	min-width: 200px;
-	max-width: 250px;
+	white-space: nowrap;
+	width: 40%;
 	text-align: left;
 	border-right: 1px solid darkgray;
 	padding-right: var(--section-margin);

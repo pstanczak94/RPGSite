@@ -6,6 +6,8 @@ from datetime import timedelta
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from apps.tools.tools import CaseInsensitiveKwargs
+
 @receiver(post_save)
 def player_post_save(sender, instance, created, **kwargs):
     if sender == Player and created:
@@ -15,20 +17,13 @@ def player_post_save(sender, instance, created, **kwargs):
             )
 
 class PlayerManager(models.Manager):
-    
-    def _check_kwargs_for_name(self, **kwargs):
-        name_field = 'name'
-        if name_field in kwargs:
-            name = kwargs.pop(name_field)
-            kwargs[name_field + '__iexact'] = name
-        return kwargs
-    
+
     def filter(self, **kwargs):
-        kwargs = self._check_kwargs_for_name(**kwargs)
+        kwargs = CaseInsensitiveKwargs('name', **kwargs)
         return super(PlayerManager, self).filter(**kwargs)
 
     def get(self, **kwargs):
-        kwargs = self._check_kwargs_for_name(**kwargs)
+        kwargs = CaseInsensitiveKwargs('name', **kwargs)
         return super(PlayerManager, self).get(**kwargs)
     
 class Player(models.Model):

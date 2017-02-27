@@ -2,7 +2,8 @@
 
 ####Jakie biblioteki zostały użyte?
 
-- _**django** (1.11b1)_
+- _**django** (1.10.5)_
+- _**pytz** (2016.10)_
 - _**mysqlclient** (1.3.10)_
 - _**whitenoise** (3.3.0)_
 - _**django-emoji** (2.2.0)_

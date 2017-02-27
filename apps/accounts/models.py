@@ -6,16 +6,20 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from apps.tools import tools
+from apps.tools.tools import CaseInsensitiveKwargs, LogError
 
 def default_email_expiration():
     return timezone.now() + settings.EMAIL_VERIFICATION_TIME
 
 class AccountManager(auth_models.UserManager):
 
-    def get_by_natural_key(self, username):
-        case_insensitive_username_field = self.model.USERNAME_FIELD + '__iexact'
-        return self.get(**{case_insensitive_username_field: username})
+    def filter(self, **kwargs):
+        kwargs = CaseInsensitiveKwargs(self.model.USERNAME_FIELD, **kwargs)
+        return super(AccountManager, self).filter(**kwargs)
+
+    def get(self, **kwargs):
+        kwargs = CaseInsensitiveKwargs(self.model.USERNAME_FIELD, **kwargs)
+        return super(AccountManager, self).get(**kwargs)
 
     def username_exists(self, username):
         return self.get_queryset().filter(username__iexact=username).exists()
@@ -28,7 +32,7 @@ class AccountManager(auth_models.UserManager):
             account = self.create_user(username, email=email, password=password)
             account.init_email_verification()
         except Exception as e:
-            tools.LogError(repr(e))
+            LogError(repr(e))
             return None
         else:
             return account
@@ -44,17 +48,17 @@ class Account(auth_models.AbstractUser):
         blank = True,
     )
 
-    blocked = models.BooleanField(
-        _('blocked'),
-        default = False,
-        help_text = _('Designates whether this user is blocked.'),
-    )
-
-    warned = models.BooleanField(
-        _('warned'),
-        default = False,
-        help_text = _('Designates whether this user was warned.'),
-    )
+    # blocked = models.BooleanField(
+    #     _('blocked'),
+    #     default = False,
+    #     help_text = _('Designates whether this user is blocked.'),
+    # )
+    #
+    # warned = models.BooleanField(
+    #     _('warned'),
+    #     default = False,
+    #     help_text = _('Designates whether this user was warned.'),
+    # )
 
     email_activated = models.BooleanField(
         _('email activated'),
@@ -102,6 +106,25 @@ class Account(auth_models.AbstractUser):
         else:
             return self.username
 
+    @property
+    def get_active_bans(self):
+        return self.banned_account.filter(active=True)
+
+    def change_password(self, old_password, new_password):
+        if self.has_usable_password() and not self.check_password(old_password):
+            raise ValueError('Password does not match.')
+        else:
+            self.set_password(new_password)
+            self.save()
+
+    @property
+    def get_players(self):
+        return self.player_set.all()
+    
+    @property
+    def can_add_character(self):
+        return self.get_players.count() < settings.MAX_PLAYERS_PER_ACCOUNT
+
     def generate_email_key(self):
         seed = settings.SECRET_KEY + self.username + self.email
         return hashlib.sha256(seed.encode('utf-8')).hexdigest()
@@ -120,20 +143,8 @@ class Account(auth_models.AbstractUser):
         self.email_key_expires = None
         self.save()
 
-    def change_password(self, old_password, new_password):
-        if self.has_usable_password() and not self.check_password(old_password):
-            raise ValueError('Password does not match.')
-        else:
-            self.set_password(new_password)
-            self.save()
-
-    @property
-    def get_players(self):
-        return self.player_set.all()
-    
-    @property
-    def can_add_character(self):
-        return self.get_players.count() < settings.MAX_PLAYERS_PER_ACCOUNT
-
-class Group(auth_models.Group):
-    pass
+class AccountGroup(auth_models.Group):
+    class Meta:
+        proxy = True
+        verbose_name = _('group')
+        verbose_name_plural = _('groups')

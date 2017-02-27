@@ -10,6 +10,9 @@ from django.utils.translation import ugettext_lazy as _
 from apps.tools.forms import AutoFocusFormMixin, CharField
 
 from .models import Account
+from apps.server.models import AccountBan
+from django.utils.formats import date_format
+from apps.tools import tools
 
 username_validators = [
     RegexValidator(
@@ -90,6 +93,29 @@ class LoginForm(AutoFocusFormMixin, forms.Form):
         if not account.is_active or account.blocked:
             self.add_form_error(_('This account is blocked or deleted.'))
             return
+        
+        for ban in account.get_active_bans:
+            if ban.permament:
+                self.add_form_error(_(
+                    'Your account has been permamently banned.\n'
+                    'Ban reason: {0}.'
+                ).format(
+                    ban.get_reason_display()
+                ))
+                return
+            elif ban.expires and ban.expires > timezone.now():
+                self.add_form_error(_(
+                    'Your account has been banned.\n'
+                    'Ban reason: {0}.\n'
+                    'Ban expires: {1}.'
+                ).format(
+                    ban.get_reason_display(),
+                    tools.GetLocalDateTime(ban.expires)
+                ))
+                return
+            else:
+                ban.active = False
+                ban.save()
 
         if not user:
             self.add_form_error(_('You cannot log into this account.'))

@@ -1,14 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import Group
 from django.utils.translation import ugettext_lazy as _
 
+from apps.accounts.models import AccountGroup
 from .models import Account
-from django.utils.safestring import mark_safe
-from django.urls.base import reverse_lazy
-from django.contrib.auth import models as auth_models
-from apps.accounts.models import Group
+from apps.tools.tools import GetPlayersWithLinks
 
-@admin.register(Account)
 class AccountAdmin(UserAdmin):
     
     fieldsets = (
@@ -16,7 +14,7 @@ class AccountAdmin(UserAdmin):
             'fields': ('username', 'password')
         }),
         (_('Account status'), {
-            'fields': ('is_active', 'blocked', 'email_activated', 'warned')
+            'fields': ('is_active', 'email_activated')
         }),
         (_('Personal info'), {
             'fields': ('email', 'full_name')
@@ -32,11 +30,11 @@ class AccountAdmin(UserAdmin):
     readonly_fields = ('date_joined', 'last_login')
 
     list_display = (
-        'username', 'email', 'get_players_view', 'date_joined', 'email_activated', 'blocked'
+        'username', 'email', 'get_players_view', 'date_joined', 'email_activated'
     )
 
     list_filter = (
-        'is_staff', 'is_active', 'email_activated', 'blocked', 'warned'
+        'is_staff', 'is_active', 'email_activated'
     )
 
     search_fields = ('username', 'email', 'first_name', 'last_name')
@@ -44,21 +42,9 @@ class AccountAdmin(UserAdmin):
     ordering = ('username',)
 
     def get_players_view(self, account):
-        ret = []
-        
-        for player in account.get_players:
-            ret.append(
-                '<a href="' + 
-                str(reverse_lazy('admin:players_player_change', args=(player.pk,))) + 
-                '">' + player.name + '</a>')
-            
-        return mark_safe(', '.join(ret)) if ret else self.get_empty_value_display()
-    
+        return GetPlayersWithLinks(account.get_players)
     get_players_view.short_description = _('Players')
 
-admin.site.unregister(auth_models.Group)
-
-@admin.register(Group)
-class GroupAdmin(admin.ModelAdmin):
-    pass
-
+admin.site.unregister(Group)
+admin.site.register(AccountGroup)
+admin.site.register(Account, AccountAdmin)
