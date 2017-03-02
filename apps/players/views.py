@@ -45,6 +45,7 @@ class CreateView(LoginRequiredMixin, tools_views.CustomFormView):
     
 class DeleteView(LoginRequiredMixin, django_views.DeleteView):
     model = Player
+    template_name = 'players/delete.html'
     success_url = reverse_lazy('accounts:profile')
     
     def _check_player(self, request):
@@ -58,3 +59,7 @@ class DeleteView(LoginRequiredMixin, django_views.DeleteView):
     def delete(self, request, *args, **kwargs):
         self._check_player(request)
         return super(DeleteView, self).delete(request, *args, **kwargs)
+
+class StatsView(django_views.ListView):
+    model = Player
+    template_name = 'players/stats.html'

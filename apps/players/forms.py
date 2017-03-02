@@ -62,7 +62,7 @@ class CreateForm(forms.ModelForm):
             return data
 
         if Player.objects.name_exists(fixed_name):
-            self.add_error('name', _('That name is already beign used.'))
+            self.add_error('name', _('That name is already being used.'))
             return data
         
         return data

@@ -96,29 +96,12 @@ class LoginForm(AutoFocusFormMixin, forms.Form):
         if not account.is_active:
             self.add_form_error(_('This account is blocked or deleted.'))
             return data
-        
-        for ban in account.get_active_bans:
-            if ban.permament:
-                self.add_form_error(_(
-                    'Your account has been permamently banned.\n'
-                    'Ban reason: {reason}.'
-                ).format(
-                    reason = ban.get_reason_display()
-                ))
-                return data
-            elif ban.expires and ban.expires > timezone.now():
-                self.add_form_error(_(
-                    'Your account has been banned.\n'
-                    'Ban reason: {reason}.\n'
-                    'Ban expires: {expires}.'
-                ).format(
-                    reason = ban.get_reason_display(),
-                    expires = tools.GetLocalDateTime(ban.expires)
-                ))
-                return data
-            else:
-                ban.active = False
-                ban.save()
+
+        ban_info = account.get_ban_info
+
+        if ban_info:
+            self.add_form_error(ban_info)
+            return data
 
         if not user:
             self.add_form_error(_('Account authentication failed.'))

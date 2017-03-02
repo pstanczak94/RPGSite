@@ -6,7 +6,8 @@ from datetime import timedelta
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from apps.tools.tools import CaseInsensitiveKwargs
+from apps.tools.tools import CaseInsensitiveKwargs, GetLocalDateTime
+
 
 @receiver(post_save)
 def player_post_save(sender, instance, created, **kwargs):
@@ -259,6 +260,38 @@ class Player(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def check_is_banned(self):
+        for ban in self.banned_player.filter(active=True):
+            if ban.permament or not ban.has_expired:
+                return True
+        return False
+
+    @property
+    def get_active_bans(self):
+        return self.banned_player.filter(active=True)
+
+    @property
+    def get_ban_info(self):
+        for ban in self.get_active_bans:
+            if ban.permament:
+                return str(_(
+                    'This player has been permamently banned.\n'
+                    'Ban reason: {reason}.'
+                ).format(
+                    reason = ban.get_reason_display()
+                ))
+            if not ban.has_expired:
+                return str(_(
+                    'This player has been banned.\n'
+                    'Ban reason: {reason}.\n'
+                    'Ban expires: {expires}.'
+                ).format(
+                    reason = ban.get_reason_display(),
+                    expires = GetLocalDateTime(ban.expires)
+                ))
+        return ''
 
 class PlayerGroup(models.Model):
     

@@ -6,7 +6,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from apps.tools.tools import CaseInsensitiveKwargs, LogError
+from apps.tools.tools import CaseInsensitiveKwargs, LogError, GetLocalDateTime
+
 
 def default_email_expiration():
     return timezone.now() + settings.EMAIL_VERIFICATION_TIME
@@ -98,6 +99,27 @@ class Account(auth_models.AbstractUser):
     @property
     def get_active_bans(self):
         return self.banned_account.filter(active=True)
+
+    @property
+    def get_ban_info(self):
+        for ban in self.get_active_bans:
+            if ban.permament:
+                return str(_(
+                    'This account has been permamently banned.\n'
+                    'Ban reason: {reason}.'
+                ).format(
+                    reason = ban.get_reason_display()
+                ))
+            if not ban.has_expired:
+                return str(_(
+                    'This account has been banned.\n'
+                    'Ban reason: {reason}.\n'
+                    'Ban expires: {expires}.'
+                ).format(
+                    reason = ban.get_reason_display(),
+                    expires = GetLocalDateTime(ban.expires)
+                ))
+        return ''
 
     def change_password(self, old_password, new_password):
         if self.has_usable_password() and not self.check_password(old_password):

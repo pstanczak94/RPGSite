@@ -1,0 +1,7 @@
+.players-table {
+	background-color: white;
+}
+
+.players-tr > td {
+	text-align: left;
+}

@@ -57,6 +57,14 @@ class AbstractBan(models.Model):
     class Meta:
         abstract = True
 
+    @property
+    def has_expired(self):
+        if self.permament:
+            return False
+        if self.expires and self.expires > timezone.now():
+            return False
+        return True
+
 class AccountBan(AbstractBan):
     
     banned = models.ForeignKey(
