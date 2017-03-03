@@ -8,7 +8,6 @@ from django.dispatch import receiver
 
 from apps.tools.tools import CaseInsensitiveKwargs, GetLocalDateTime
 
-
 @receiver(post_save)
 def player_post_save(sender, instance, created, **kwargs):
     if sender == Player and created:

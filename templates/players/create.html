@@ -29,7 +29,7 @@
 			<table>
 				{% for field in form.visible_fields %}
 					<tr>
-						<th>{{ field | bootstrap_label }}</td>
+						<th>{{ field | bootstrap_label }}</th>
 						<td>{{ field | bootstrap_input }}</td>
 					</tr>
 					{% if field.errors %}

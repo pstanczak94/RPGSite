@@ -6,8 +6,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from apps.tools.tools import CaseInsensitiveKwargs, LogError, GetLocalDateTime
-
+from apps.tools.tools import CaseInsensitiveKwargs, GetLocalDateTime
 
 def default_email_expiration():
     return timezone.now() + settings.EMAIL_VERIFICATION_TIME

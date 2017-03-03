@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block content-title %}
 	Profile
 {% endblock %}
@@ -7,70 +9,97 @@
 {% block content %}
 	{% link_static_css 'css/accounts/profile.css' %}
 	
+	<script type="text/javascript">
+	<!--
+		$(document).ready(function() {
+			$('.characters-tr').click(function(){
+				$(this).next().fadeToggle();
+			});
+			$('.characters-extra > td > div').each(function() {
+				if (/^\s*$/.test($(this).text())) {
+					$(this).text('{% trans "No additional info about this player" %}');
+				}
+			});
+		});
+	//-->
+	</script>
+	
 	<table class="profile-table">
 		<tr class="profile-tr">
 			<td id="profile-td-1">
-				<h1 class="text-center">Information</h1>
+				<h1 class="text-center">{% trans "Information" %}</h1>
 				
-				<p><strong>Username:</strong> {{ account.username }}</p>
+				<p><strong>{% trans "Username" %}:</strong> {{ account.username }}</p>
 			
 				{% if account.has_full_name %}
-					<p><strong>Full name:</strong> {{ account.get_full_name }}</p>
+					<p><strong>{% trans "Full name" %}:</strong> {{ account.get_full_name }}</p>
 				{% endif %}
 				
 				{% if account.email %}
-					<p><strong>Email:</strong> {{ account.email }}</p>
+					<p><strong>{% trans "Email" %}:</strong> {{ account.email }}</p>
 					<p>
 					{% if not account.email_activated %}
 						{% emoji 'exclamation' %}
-						<a id="email-not-activated" 
-							href="{% url 'accounts:email-activation' %}">Email is not activated</a>
+						<a id="email-not-activated" href="{% url 'accounts:email-activation' %}">
+							{% trans "Email is not activated" %}
+						</a>
 						{% emoji 'exclamation' %}
 					{% else %}
-						<span id="email-activated">Email is activated.</span>
+						<span id="email-activated">
+							{% trans "Email is activated." %}
+						</span>
 					{% endif %}
 					</p>
 				{% else %}
-					<p id="email-not-configured">Email is not configured.</p>
+					<p id="email-not-configured">
+						{% trans "Email is not configured." %}
+					</p>
 				{% endif %}
 			</td>
 			<td id="profile-td-2">
 				<div class="text-center">
-					<h1>List of characters</h1>
+					<h1>{% trans "List of characters" %}</h1>
 					
-					<table class="table table-striped table-hover characters-table">
+					<table class="table table-hover characters-table">
 						<tr>
-							<th>Name</th>
-							<th>Vocation</th>
-							<th>Level</th>
+							<th>{% trans "Name" %}</th>
+							<th>{% trans "Vocation" %}</th>
+							<th>{% trans "Level" %}</th>
 							<th></th>
 						</tr>
 						{% for player in players %}
-							<tr id="character-{{ forloop.counter }}" class="characters-tr">
-								<td title="
-									{% if player.guild %}
-										Guild: {{ player.guild.name }}
-									{% endif %}
-									{% if player.house_owner %}
-										House: {{ player.house_owner.name }}
-									{% endif %}
-								">{{ player.name }}</td>
+							<tr class="characters-tr" id="character-{{ forloop.counter }}">
+								<td>{{ player.name }}</td>
 								<td>{{ player.get_vocation_display }}</td>
 								<td>{{ player.level }}</td>
 								<td><a 	id="delete-character-link"
 										class="glyphicon glyphicon-remove" 
 										href="{% url 'players:delete' player.pk %}" 
-										title="Delete character"></a></td>
+										title="{% trans "Delete character" %}"></a></td>
+							</tr>
+							<tr class="characters-extra">
+								<td colspan="10">
+									<div>
+										{% if player.guild %}
+											<p>{% trans "Guild" %}: {{ player.guild.name }}</p>
+										{% endif %}
+										{% if player.house_owner %}
+											<p>{% trans "House" %}: {{ player.house_owner.name }}</p>
+										{% endif %}
+									</div>
+								</td>
 							</tr>
 						{% empty %}
-							<tr><td colspan="4">&nbsp;</td></tr>
+							<tr><td colspan="10">&nbsp;</td></tr>
 						{% endfor %}
 					</table>
 					
-					<p>Characters count: <strong>{{ players_count }} / {{ players_max }}</strong></p>
+					<p>{% trans "Characters count" %}: <strong>{{ players_count }} / {{ players_max }}</strong></p>
 				
 					<a 	class="btn btn-success{% if not can_add_player %} disabled {% endif %}" 
-						href="{% url 'players:create' %}">Create character</a>
+						href="{% url 'players:create' %}">
+						{% trans "Create character" %}
+					</a>
 				</div>
 			</td>
 		</tr>
@@ -79,6 +108,6 @@
 	<hr>
 
 	<a href="{% url 'accounts:password' %}">
-		<input type="button" class="btn btn-primary" value="Change password" />
+		<input type="button" class="btn btn-primary" value="{% trans "Change password" %}" />
 	</a>
 {% endblock %}

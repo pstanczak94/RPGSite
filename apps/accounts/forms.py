@@ -11,7 +11,6 @@ from apps.tools.forms import AutoFocusFormMixin, CharField
 from apps.tools.tools import LogError
 
 from .models import Account
-from apps.tools import tools
 
 username_validators = [
     RegexValidator(

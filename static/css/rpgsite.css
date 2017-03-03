@@ -3,7 +3,7 @@
 :root {
 	--layout-border-color: black;
 	--layout-border-radius: 20px;
-	--layout-glow-color: red;
+	--layout-glow-color: brown;
 }
 
 /* Html, body, headers */
@@ -22,7 +22,6 @@ body {
 	background-size: cover;
 
     font-family: Verdana, sans-serif;
-    -webkit-font-smoothing: antialiased;
 }
 
 h1 { font-size: 20px; font-weight: bold; }
@@ -44,7 +43,7 @@ td {
 /* Main containers */
 
 #base-container {
-	min-width: 640px;
+	min-width: 666px;
 	padding: 20px;
 }
 
@@ -107,13 +106,13 @@ td {
 
 /* Navigation */
 
-#navigation {
+.navigation {
 	display: flex;
 	align-items: center;
 	padding: 5px;
 }
 
-#navigation-wrapper {
+.navigation-wrapper {
 	display: block;
 	margin: 0 auto;
 }
@@ -130,7 +129,7 @@ td {
     display: block;
 }
 
-#navigation-end {
+.navigation-end {
 	display: none;
 	clear: both;
 }
@@ -138,8 +137,8 @@ td {
 /* Navigation as text */
 
 .navigation-link {
-    font-family: Comic Sans MS, Verdana, sans-serif;
-    font-size: 20px;
+    font-family: Verdana, sans-serif;
+    font-size: 16px;
     font-weight: bold;
     margin: 0 auto;
     padding: 5px;
