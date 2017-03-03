@@ -75,7 +75,8 @@
 								<td><a 	id="delete-character-link"
 										class="glyphicon glyphicon-remove" 
 										href="{% url 'players:delete' player.pk %}" 
-										title="{% trans "Delete character" %}"></a></td>
+										title="{% trans "Delete character" %}"
+										onclick="event.stopPropagation();"></a></td>
 							</tr>
 							<tr class="characters-extra">
 								<td colspan="10">

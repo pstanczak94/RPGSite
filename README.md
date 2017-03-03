@@ -1,5 +1,31 @@
 ##Projekt RPGSite
 
+####O projekcie
+
+Projekt RPGSite to stworzenie aplikacji webowej w popularnym frameworku webowym Django (www.djangoproject.com) opierającym się na języku programowania Python. Zamysłem autora jest stworzenie unikalnego designu od podstaw dzięki znajomości takich języków jak HTML, CSS, JavaScript i oczywiście Python. Interfejs ma być przejrzysty, intuicyjny oraz funkcjonalny.
+
+####Cel projektu
+
+Zadaniem aplikacji webowej będzie stworzenie przyjaznego dla użytkownika środowiska, które będzie udostępniało następujące funkcjonalności:
+- Tworzenie konta użytkownika (w tym sprawdzanie poprawności podanych danych: nazwa użytkownika, hasło i adres email)
+- Weryfikacja adresu email użytkownika poprzez wysłanie na podany adres kodu weryfikacyjnego (lub gotowego linku do aktywacji)
+- Możliwość zmiany hasła użytkownika
+- Tworzenie postaci z możliwością wyboru określonych parametrów (tj. nazwa postaci, płeć, profesja, miasto, itp.), które będą miały odzwierciedlenie w świecie gry
+- Przegląd postaci przypisanych do konta oraz możliwość ich usunięcia
+- Możliwość utworzenia gildii, do której będą mogli wstąpić inni gracze, po spełnieniu odpowiednich warunków np. poziom postaci wyższy niż 50
+- Możliwość zarządzania przez administratorów wszystkimi obiektami bazy danych gry w prosty, łatwy i przyjemny sposób
+- Inne, na które autor jeszcze nie wpadł
+
+####Harmonogram pracy
+
+- Tydzień 1 - stworzenie podstawowego szkieletu strony
+- Tydzień 2 - dodanie możliwości tworzenia konta oraz autoryzowanego dostępu użytkowników
+- Tydzień 3 - napisanie mechanizmu pozwalającego na tworzenie więcej niż jednej postaci przypisanej do konta
+- Tydzień 4 - opracowanie systemu statystyk z możliwością grupowania i sortowania wszystkich postaci
+- Tydzień 5 - dodanie możliwości tworzenia gildii z możliwością zapraszania do nich innych graczy
+- Tydzień 6 - praca nad doskonaleniem interfejsu użytkownika, dodanie dynamicznych przejść między kolejnymi etapami tworzenia postaci
+- Tydzień 7 - szukanie błędów w kodzie, poprawki błędów i ostateczne domknięcie projektu
+
 ####Jakie biblioteki zostały użyte?
 
 - _**django** (1.10.5)_
@@ -46,3 +72,5 @@ python.exe manage.py migrate
 python.exe manage.py collectstatic
 python.exe manage.py runserver 0.0.0.0:80
 ```
+
+Aby poprawnie uruchomić serwer należy utworzyć folder ```secret``` (w głównym folderze projektu), a w nim dwa kolejne foldery - ```database``` oraz ```logs```.
