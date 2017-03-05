@@ -3,7 +3,7 @@
 ####O projekcie
 
 Projekt RPGSite to stworzenie aplikacji webowej w popularnym frameworku 
-webowym [Django](www.djangoproject.com) opierającym się na języku programowania 
+webowym [Django](https://www.djangoproject.com) opierającym się na języku programowania 
 Python. Zamysłem autora jest stworzenie unikalnego designu od podstaw dzięki 
 znajomości takich języków jak HTML, CSS, JavaScript i oczywiście Python. 
 Interfejs ma być przejrzysty, intuicyjny oraz funkcjonalny.
