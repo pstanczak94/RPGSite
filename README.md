@@ -2,15 +2,24 @@
 
 ####O projekcie
 
-Projekt RPGSite to stworzenie aplikacji webowej w popularnym frameworku webowym Django (www.djangoproject.com) opierającym się na języku programowania Python. Zamysłem autora jest stworzenie unikalnego designu od podstaw dzięki znajomości takich języków jak HTML, CSS, JavaScript i oczywiście Python. Interfejs ma być przejrzysty, intuicyjny oraz funkcjonalny.
+Projekt RPGSite to stworzenie aplikacji webowej w popularnym frameworku 
+webowym [Django](www.djangoproject.com) opierającym się na języku programowania 
+Python. Zamysłem autora jest stworzenie unikalnego designu od podstaw dzięki 
+znajomości takich języków jak HTML, CSS, JavaScript i oczywiście Python. 
+Interfejs ma być przejrzysty, intuicyjny oraz funkcjonalny.
 
 ####Zastosowanie
 
-Projekt może być wykorzystany jako (często niezbędny) dodatek do serwera gry, który będzie stanowił bogaty interfejs. Założeniem autora jest osiągnięcie kompatybilności z przynajmniej jednym takim serwerem, którym najprawdopodobniej będzie Avesta (https://github.com/Nottinghster/Avesta). 
+Projekt może być wykorzystany jako (często niezbędny) dodatek do serwera gry, 
+który będzie stanowił bogaty interfejs. Założeniem autora jest osiągnięcie 
+kompatybilności z przynajmniej jednym takim serwerem, którym najprawdopodobniej 
+będzie [forgottenserver](https://github.com/otland/forgottenserver). 
 
 ####Cel projektu
 
-Zadaniem aplikacji webowej będzie stworzenie przyjaznego dla użytkownika środowiska, które będzie udostępniało następujące funkcjonalności:
+Zadaniem aplikacji webowej będzie stworzenie przyjaznego dla użytkownika 
+środowiska, które będzie udostępniało następujące funkcjonalności:
+
 - Tworzenie konta użytkownika (w tym sprawdzanie poprawności podanych danych: nazwa użytkownika, hasło i adres email)
 - Weryfikacja adresu email użytkownika poprzez wysłanie na podany adres kodu weryfikacyjnego (lub gotowego linku do aktywacji)
 - Możliwość zmiany hasła użytkownika
@@ -77,4 +86,8 @@ python.exe manage.py collectstatic
 python.exe manage.py runserver 0.0.0.0:80
 ```
 
-Aby poprawnie uruchomić serwer należy utworzyć folder ```secret``` (w głównym folderze projektu), a w nim dwa kolejne foldery - ```database``` oraz ```logs```.
+
+Aby poprawnie uruchomić serwer należy utworzyć folder `secret` w głównym folderze projektu.
+
+Natomiast w folderze `secret` dwa kolejne foldery - `database` oraz `logs`.
+
