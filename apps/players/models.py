@@ -54,7 +54,8 @@ class Player(models.Model):
     
     account = models.ForeignKey(
         'accounts.Account', 
-        on_delete = models.CASCADE, 
+        on_delete = models.CASCADE,
+        related_name = 'players'
     )
     
     group = models.ForeignKey(
@@ -252,6 +253,11 @@ class Player(models.Model):
         default = timezone.now
     )
 
+    vips = models.ManyToManyField(
+        'self',
+        symmetrical = False
+    )
+
     class Meta:
         db_table = 'players'
         verbose_name = _('player')
@@ -260,20 +266,17 @@ class Player(models.Model):
     def __str__(self):
         return self.name
 
-    @property
     def check_is_banned(self):
         for ban in self.banned_player.filter(active=True):
             if ban.permament or not ban.has_expired:
                 return True
         return False
 
-    @property
     def get_active_bans(self):
         return self.banned_player.filter(active=True)
 
-    @property
     def get_ban_info(self):
-        for ban in self.get_active_bans:
+        for ban in self.get_active_bans():
             if ban.permament:
                 return str(_(
                     'This player has been permamently banned.\n'
@@ -323,6 +326,7 @@ class PlayerGroup(models.Model):
     def __str__(self):
         return self.name
 
+"""
 class PlayerVipList(models.Model):
     
     player = models.ForeignKey(
@@ -348,6 +352,7 @@ class PlayerVipList(models.Model):
         return '%s -> %s' % (
             self.player.name, self.vip_player.name
         )
+"""
 
 class PlayerSpell(models.Model):
     

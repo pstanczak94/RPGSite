@@ -30,7 +30,7 @@
 			<h1>You're already logged in.</h1>
 			<h2>Click <a href="{% url 'accounts:logout' %}">here</a> to logout.</h2>
 		{% else %}
-			{% include 'full_form_errors.html' %}
+			{% include 'forms/full_form_errors.html' %}
 
 			<form action="{% url 'accounts:login' %}" method="post">
 				{% csrf_token %}

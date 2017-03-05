@@ -1,7 +1,9 @@
 from django import forms
 from django.forms.widgets import TextInput
 
-def extend_kwargs(**kwargs):
+# Functions
+
+def extend_field_kwargs(**kwargs):
 
     kwargs.setdefault('widget', TextInput())
 
@@ -15,17 +17,41 @@ def extend_kwargs(**kwargs):
 
     return kwargs
 
+def set_autofocus_to_fields(form):
+    for bound_field in form.visible_fields():
+        if bound_field.errors:
+            bound_field.field.widget.attrs['autofocus'] = ''
+        elif 'autofocus' in bound_field.field.widget.attrs:
+            bound_field.field.widget.attrs.pop('autofocus')
+
+# Fields
+
 class CharField(forms.CharField):
     def __init__(self, **kwargs):
-        kwargs = extend_kwargs(**kwargs)
+        kwargs = extend_field_kwargs(**kwargs)
         super(CharField, self).__init__(**kwargs)
 
 class EmailField(forms.EmailField):
     def __init__(self, **kwargs):
-        kwargs = extend_kwargs(**kwargs)
+        kwargs = extend_field_kwargs(**kwargs)
         super(EmailField, self).__init__(**kwargs)
 
-# Extended forms
+# Forms
+
+class CustomModelForm(forms.ModelForm):
+
+    autofocus_post_clean = True
+
+    def __init__(self, *args, **kwargs):
+        super(CustomModelForm, self).__init__(*args, **kwargs)
+        if hasattr(self, 'Meta') and hasattr(self.Meta, 'widget_attrs'):
+            for key, value in self.Meta.widget_attrs.items():
+                self.fields[key].widget.attrs.update(value)
+
+    def _post_clean(self):
+        super(CustomModelForm, self)._post_clean()
+        if self.autofocus_post_clean:
+            set_autofocus_to_fields(self)
 
 class AutoFocusFormMixin(object):
 
@@ -56,7 +82,7 @@ class AutoFocusFormMixin(object):
         self.set_autofocus(field_to_focus)
         self.add_error(None, message)
 
-# Extended widgets
+# Widgets
 
 class BootstrapTextInput(TextInput):
     def __init__(self, attrs=None):

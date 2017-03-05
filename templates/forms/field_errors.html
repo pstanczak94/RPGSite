@@ -1,5 +1,5 @@
 {% if field.errors %}
-    <ul class="field-error-list list-group">
+    <ul class="list-group field-error-list">
     {% for error in field.errors %}
         <li class="list-group-item">{{ error | escape | linebreaksbr }}</li>
     {% endfor %}

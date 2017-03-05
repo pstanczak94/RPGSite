@@ -1,5 +1,5 @@
 {% if form.non_field_errors %}
-    <ul class="form-error-list list-group">
+    <ul class="list-group form-error-list">
     {% for error in form.non_field_errors %}
         <li class="list-group-item">{{ error | escape | linebreaksbr }}</li>
     {% endfor %}

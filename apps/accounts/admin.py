@@ -17,7 +17,7 @@ class AccountAdmin(UserAdmin):
             'fields': ('is_active', 'email_activated')
         }),
         (_('Personal info'), {
-            'fields': ('email', 'full_name')
+            'fields': ('email', 'access', 'premium_days')
         }),
         (_('Permissions'), {
             'fields': ('is_staff', 'is_superuser', 'groups', 'user_permissions')
@@ -42,7 +42,7 @@ class AccountAdmin(UserAdmin):
     ordering = ('username',)
 
     def get_players_view(self, account):
-        return GetPlayersWithLinks(account.get_players)
+        return GetPlayersWithLinks(account.players.all())
     get_players_view.short_description = _('Players')
 
 admin.site.unregister(Group)

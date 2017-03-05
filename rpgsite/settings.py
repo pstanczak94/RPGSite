@@ -96,6 +96,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'rpgsite.context_processors.navigation_context_processor',
             ],
         },
     },
@@ -220,7 +221,6 @@ if EMAIL_USE_CONFIG_FILE:
             del config, section
     except Exception as e:
         print('Email config ini was not loaded correctly!')
-        print(repr(e))
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -230,6 +230,12 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
         'OPTIONS': {
             'min_length': INPUT_PASSWORD_MIN_LENGTH,
+        },
+    },
+    {
+        'NAME': 'rpgsite.validators.MaximumLengthValidator',
+        'OPTIONS': {
+            'max_length': INPUT_PASSWORD_MAX_LENGTH,
         },
     },
     {

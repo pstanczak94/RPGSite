@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http.response import HttpResponseRedirect
 from django.urls.base import reverse
@@ -9,22 +9,24 @@ from django.views import generic as views
 from apps.tools.views import CustomFormView
 
 from . import forms
-from .models import Account
 
 class IndexView(views.RedirectView):
     pattern_name = 'accounts:profile'
 
 class ProfileView(LoginRequiredMixin, views.TemplateView):
     template_name = 'accounts/profile.html'
-    
+
     def get(self, request, *args, **kwargs):
+        account = request.user
+
         kwargs.update({
-            'account': request.user,
-            'players': request.user.get_players,
-            'players_count': request.user.get_players.count(),
-            'can_add_player': request.user.can_add_character,
+            'account': account,
+            'players': account.players.all(),
+            'players_count': account.players.count(),
+            'can_add_player': account.can_add_character(),
             'players_max': settings.MAX_PLAYERS_PER_ACCOUNT,
         })
+
         return super(ProfileView, self).get(request, *args, **kwargs)
     
 class LoginView(CustomFormView):
@@ -41,9 +43,10 @@ class LoginView(CustomFormView):
     def get_next_page(self):
         if 'next' in self.request.GET:
             return self.request.GET.get('next')
-        if 'next' in self.request.POST:
+        elif 'next' in self.request.POST:
             return self.request.POST.get('next')
-        return ''
+        else:
+            return ''
 
     def get_context_data(self, **kwargs):
         context = super(LoginView, self).get_context_data(**kwargs)
@@ -82,20 +85,22 @@ class RegisterView(CustomFormView):
 
     def form_valid(self, form):
 
-        activation_link = '{scheme}://{host}{url}?user={user}&key={key}'.format(
-            scheme = self.request.scheme,
-            host = self.request.get_host(),
-            url = reverse('accounts:email-activation'),
-            user = form.account.username,
-            key = form.account.email_activation_key
-        )
+        account = form.save()
 
-        # TODO: send activation link to account.email
-        print(activation_link)
+        if account.email:
+            activation_link = '{scheme}://{host}{url}?user={user}&key={key}'.format(
+                scheme = self.request.scheme,
+                host = self.request.get_host(),
+                url = reverse('accounts:email-activation'),
+                user = account.username,
+                key = account.email_activation_key
+            )
+
+            # TODO: send activation link to account.email
+            print(activation_link)
 
         return self.render_success(
-            username = form.account.username,
-            email = form.account.email
+            account = account
         )
 
 class PasswordChangeView(LoginRequiredMixin, CustomFormView):
@@ -106,17 +111,16 @@ class PasswordChangeView(LoginRequiredMixin, CustomFormView):
 
     def get_form_kwargs(self):
         kwargs = super(PasswordChangeView, self).get_form_kwargs()
-        kwargs['account'] = self.request.user
+        kwargs['instance'] = self.request.user
         return kwargs
 
     def form_valid(self, form):
-        old_password = form.cleaned_data.get('current_password')
-        new_password = form.cleaned_data.get('password')
 
-        account = self.request.user
-        account.change_password(old_password, new_password)
-        user = authenticate(username=account.username, password=new_password)
-        login(self.request, user)
+        # Change password of an account
+        form.save()
+
+        # Relogin user that requested password change
+        login(self.request, form.instance)
 
         return self.render_success(
             next = reverse('accounts:profile')
@@ -140,7 +144,7 @@ class EmailVerificationView(CustomFormView):
         elif self.request.user.is_authenticated:
             return self.request.user.username
         else:
-            return ''
+            return None
 
     def render_clean(self):
         if not self.get_username():
@@ -151,10 +155,9 @@ class EmailVerificationView(CustomFormView):
         return super(EmailVerificationView, self).render_clean()
 
     def form_valid(self, form):
-        username = form.cleaned_data.get('username')
 
-        account = Account.objects.get_by_natural_key(username)
-        account.set_email_activated()
+        # Set email address status to activated
+        form.save()
 
         return self.render_success(
             next = reverse('index')

@@ -13,7 +13,7 @@
 			<h2>Click <a href="{% url 'accounts:profile' %}">here</a> to go to profile.</h2>
 		</div>
 	{% else %}
-		{% include 'form_errors.html' %}
+		{% include 'forms/form_errors.html' %}
 
 		{% if form.corrected_name %}
 		<script>
@@ -33,7 +33,7 @@
 						<td>{{ field | bootstrap_input }}</td>
 					</tr>
 					{% if field.errors %}
-						<tr><td class="errortd" colspan="2">{% include 'field_errors.html' %}</td></tr>
+						<tr><td class="errortd" colspan="2">{% include 'forms/field_errors.html' %}</td></tr>
 					{% endif %}
 				{% endfor %}
 			</table>

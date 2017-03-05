@@ -47,7 +47,7 @@ class CreateForm(forms.ModelForm):
         
         name = data.get('name')
 
-        if not self.account.can_add_character:
+        if not self.account.can_add_character():
             self.add_error(None, _('You can\'t create more characters.'))
             return data
 

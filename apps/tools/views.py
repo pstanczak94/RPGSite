@@ -42,8 +42,8 @@ class CustomFormView(FormView):
     def is_success(self):
         return self._success
     
-    def render_clean(self):
-        return self.render_form()
+    def render_clean(self, **kwargs):
+        return self.render_form(**kwargs)
 
     def render_success(self, **kwargs):
         self._success = True

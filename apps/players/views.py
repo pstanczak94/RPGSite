@@ -32,7 +32,7 @@ class CreateView(LoginRequiredMixin, tools_views.CustomFormView):
         
         account = self.request.user
         
-        player = account.player_set.create(
+        player = account.players.create(
             name = name,
             sex = sex,
             vocation = vocation,

@@ -1,5 +1,5 @@
 {% if form.is_bound and not form.is_valid %}
-    <ul class="form-error-list list-group">
+    <ul class="list-group form-error-list">
     {% if form.non_field_errors %}
         {% for error in form.non_field_errors %}
             <li class="list-group-item">{{ error | escape | linebreaksbr }}</li>

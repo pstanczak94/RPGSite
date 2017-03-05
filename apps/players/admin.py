@@ -3,7 +3,7 @@ from django.utils.translation import ugettext as _
 
 from .models import Player, PlayerGroup, PlayerSkill, \
     PlayerDepotItem, PlayerItem, PlayerSpell, \
-    PlayerStorage, PlayerVipList
+    PlayerStorage
 
 from django import forms
 from apps.accounts.models import Account
@@ -22,7 +22,7 @@ class PlayerAddForm(forms.ModelForm):
 
         if self.is_valid():
             account = Account.objects.get_by_natural_key(data['account'])
-            if not account.can_add_character:
+            if not account.can_add_character():
                 self.add_error('account', _(
                     'One account can only contain %(num)d players.'
                 ) % {
@@ -96,9 +96,10 @@ class PlayerStorageAdmin(admin.ModelAdmin):
     list_filter = ('key',)
     pass
 
+"""
 @admin.register(PlayerVipList)
 class PlayerVipListAdmin(admin.ModelAdmin):
     search_fields = ('player__name',)
     list_display = ('player', 'vip_player')
     pass
-
+"""
