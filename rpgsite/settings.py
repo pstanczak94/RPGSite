@@ -44,7 +44,7 @@ else:
     SECRET_DIR = os.path.join(BASE_DIR, 'secret')
 
 # Use MySQL or SQLite ?
-DATABASES_USING = 'sqlite'
+DATABASES_USING = 'mysql'
 
 # Use WhiteNoise for static files ?
 USE_WHITENOISE = IS_WINDOWS and not DEBUG
@@ -142,7 +142,7 @@ DATETIME_FORMAT = 'j F Y, H:i'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_ROOT = os.path.join(SECRET_DIR, 'static')
+STATIC_ROOT = os.path.join(SECRET_DIR, 'staticfiles')
 
 STATIC_URL = '/static/'
 
@@ -176,7 +176,7 @@ CHARACTER_NAME_REGEX = r'^[a-zA-Z ]+$'
 
 from datetime import timedelta
 
-AUTH_USER_MODEL = 'accounts.Account'
+# AUTH_USER_MODEL = 'accounts.Account'
 
 EMAIL_VERIFICATION_TIME = timedelta(days=2)
 

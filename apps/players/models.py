@@ -2,19 +2,8 @@ from django.db import models
 
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-from datetime import timedelta
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
-from apps.tools.tools import CaseInsensitiveKwargs, GetLocalDateTime
-
-@receiver(post_save)
-def player_post_save(sender, instance, created, **kwargs):
-    if sender == Player and created:
-        for i in [0,1,2,3,4,5,6]:
-            instance.playerskill_set.create(
-                skill_id = i, value = 10
-            )
+from apps.tools.tools import CaseInsensitiveKwargs, GetLocalDateTime, GetCurrentTimestamp
 
 class PlayerManager(models.Manager):
 
@@ -38,463 +27,285 @@ class Player(models.Model):
     
     SEX_CHOICES = (
         (1, _('Male')),
-        (2, _('Female')),
+        (0, _('Female')),
     )
-    
+
     VOCATION_CHOICES = (
-        (1, _('Knight')),
-        (2, _('Paladin')),
-        (3, _('Sorcerer')),
-        (4, _('Druid')),
+        (4, _('Knight')),
+        (3, _('Paladin')),
+        (1, _('Sorcerer')),
+        (2, _('Druid')),
+        # (0, _('None')),
+        # (5, _('Master Sorcerer')),
+        # (6, _('Elder Druid')),
+        # (7, _('Royal Paladin')),
+        # (8, _('Elite Knight')),
     )
-    
+
     TOWN_CHOICES = (
-        (1, _('RPGLand')),
+        (1, _('Trekolt')),
+        (2, _('Rhyves')),
+        (3, _('Varak')),
+        (4, _('Jorvik')),
+        (5, _('Saund')),
     )
-    
+
+    name = models.CharField(
+        max_length = 30,
+        unique = True,
+    )
+
+    group_id = models.SmallIntegerField(
+        default = 1,
+    )
+
     account = models.ForeignKey(
         'accounts.Account', 
         on_delete = models.CASCADE,
-        related_name = 'players'
+        related_name = 'players',
+    )
+
+    level = models.IntegerField(
+        default = 1,
     )
     
-    group = models.ForeignKey(
-        'players.PlayerGroup', 
-        null = True, 
-        blank = True, 
-        on_delete = models.SET_NULL, 
-    )
-    
-    name = models.CharField(
-        max_length = 30, 
-        unique = True, 
-    )
-    
-    sex = models.PositiveSmallIntegerField(
-        default = SEX_CHOICES[0][0],
-        choices = SEX_CHOICES,
-    )
-    
-    vocation = models.PositiveSmallIntegerField(
+    vocation = models.SmallIntegerField(
         default = VOCATION_CHOICES[0][0],
         choices = VOCATION_CHOICES,
+        db_index = True,
+    )
+
+    health = models.IntegerField(
+        default = 150,
+    )
+
+    healthmax = models.IntegerField(
+        default = 150,
+    )
+
+    experience = models.BigIntegerField(
+        default = 0,
+    )
+
+    lookbody = models.IntegerField(
+        default = 0,
+    )
+
+    lookfeet = models.IntegerField(
+        default = 0,
+    )
+
+    lookhead = models.IntegerField(
+        default = 0,
+    )
+
+    looklegs = models.IntegerField(
+        default = 0,
+    )
+
+    looktype = models.IntegerField(
+        default = 136,
+    )
+
+    lookaddons = models.IntegerField(
+        default = 0,
     )
     
-    town = models.PositiveSmallIntegerField(
+    maglevel = models.IntegerField(
+        default = 0,
+    )
+    
+    mana = models.IntegerField(
+        default = 0,
+    )
+    
+    manamax = models.IntegerField(
+        default = 0,
+    )
+    
+    manaspent = models.IntegerField(
+        default = 0,
+    )
+    
+    soul = models.IntegerField(
+        default = 0,
+    )
+
+    town_id = models.SmallIntegerField(
         default = TOWN_CHOICES[0][0],
         choices = TOWN_CHOICES,
     )
     
-    promotion = models.BooleanField(
-        default = False
+    posx = models.IntegerField(
+        default = 0,
     )
     
-    experience = models.BigIntegerField(
-        default = 0
+    posy = models.IntegerField(
+        default = 0,
     )
     
-    level = models.PositiveIntegerField(
-        default = 1
+    posz = models.IntegerField(
+        default = 0,
     )
-    
-    magic_level = models.PositiveSmallIntegerField(
-        default = 0
-    )
-    
-    health = models.PositiveIntegerField(
-        default = 150
-    )
-    
-    health_max = models.PositiveIntegerField(
-        default = 150
-    )
-    
-    mana = models.PositiveIntegerField(
-        default = 0
-    )
-    
-    mana_max = models.PositiveIntegerField(
-        default = 0
-    )
-    
-    mana_spent = models.PositiveIntegerField(
-        default = 0
-    )
-    
-    soul = models.PositiveSmallIntegerField(
-        default = 0
-    )
-    
-    direction = models.PositiveSmallIntegerField(
-        default = 2
-    )
-    
-    look_body = models.PositiveSmallIntegerField(
-        default = 0
-    )
-    
-    look_feet = models.PositiveSmallIntegerField(
-        default = 0
-    )
-    
-    look_head = models.PositiveSmallIntegerField(
-        default = 0
-    )
-    
-    look_legs = models.PositiveSmallIntegerField(
-        default = 0
-    )
-    
-    look_type = models.PositiveSmallIntegerField(
-        default = 136
-    )
-    
-    pos_x = models.PositiveIntegerField(
-        default = 0
-    )
-    
-    pos_y = models.PositiveIntegerField(
-        default = 0
-    )
-    
-    pos_z = models.PositiveSmallIntegerField(
-        default = 0
-    )
-    
-    capacity = models.PositiveIntegerField(
-        default = 0
-    )
-    
-    last_logout = models.DateTimeField(
-        default = None,
-        null = True, 
-        blank = True
-    )
-    
-    last_ip = models.GenericIPAddressField(
-        default = None,
-        null = True, 
-        blank = True
-    )
-    
-    save_on_logout = models.BooleanField(
-        default = True
-    )
-    
+
     conditions = models.BinaryField(
-        default = b''
+        default = b'',
     )
     
-    stamina = models.DurationField(
-        default = timedelta(days=1, hours=12)
-    )
-    
-    skull = models.BooleanField(
-        default = False
-    )
-    
-    skull_time = models.DurationField(
-        default = None,
-        null = True,
-        blank = True
-    )
-    
-    loss_experience = models.PositiveIntegerField(
-        default = 100
-    )
-    
-    loss_mana = models.PositiveIntegerField(
-        default = 100
-    )
-    
-    loss_skills = models.PositiveIntegerField(
-        default = 100
-    )
-    
-    loss_items = models.PositiveIntegerField(
-        default = 100
-    )
-    
-    balance = models.PositiveIntegerField(
-        default = 0
-    )
-    
-    premium_end = models.DateTimeField(
-        default = None,
-        null = True, 
-        blank = True
-    )
-    
-    guild = models.ForeignKey(
-        'guilds.Guild', 
-        null = True,
-        blank = True, 
-        on_delete = models.SET_NULL
-    )
-    
-    guild_rank = models.ForeignKey(
-        'guilds.GuildRank', 
-        null = True,
-        blank = True, 
-        on_delete = models.SET_NULL
-    )
-    
-    guild_nick = models.CharField(
-        default = '',
-        max_length = 30, 
-        blank = True
-    )
-    
-    in_game = models.BooleanField(
-        default = False
-    )
-    
-    created = models.DateTimeField(
-        default = timezone.now
+    cap = models.IntegerField(
+        default = 150,
     )
 
-    vips = models.ManyToManyField(
-        'self',
-        symmetrical = False
+    sex = models.PositiveSmallIntegerField(
+        default = SEX_CHOICES[0][0],
+        choices = SEX_CHOICES,
+    )
+
+    lastlogin = models.BigIntegerField(default=0)
+    lastlogout = models.BigIntegerField(default=0)
+    lastip = models.IntegerField(default=0)
+    save_on_logout = models.BooleanField(default=True, db_column='save')
+    stamina = models.SmallIntegerField(default=2520)
+    skull = models.BooleanField(default=False)
+    skulltime = models.IntegerField(default=0)
+    balance = models.PositiveIntegerField(default=0)
+    blessings = models.IntegerField(default=0)
+    onlinetime = models.IntegerField(default=0)
+    deletion = models.BigIntegerField(default=0)
+    offlinetraining_time = models.SmallIntegerField(default=43200)
+    offlinetraining_skill = models.IntegerField(default=-1)
+    skill_fist = models.IntegerField(default=10)
+    skill_fist_tries = models.BigIntegerField(default=0)
+    skill_club = models.IntegerField(default=10)
+    skill_club_tries = models.BigIntegerField(default=0)
+    skill_sword = models.IntegerField(default=10)
+    skill_sword_tries = models.BigIntegerField(default=0)
+    skill_axe = models.IntegerField(default=10)
+    skill_axe_tries = models.BigIntegerField(default=0)
+    skill_dist = models.IntegerField(default=10)
+    skill_dist_tries = models.BigIntegerField(default=0)
+    skill_shielding = models.IntegerField(default=10)
+    skill_shielding_tries = models.BigIntegerField(default=0)
+    skill_fishing = models.IntegerField(default=10)
+    skill_fishing_tries = models.BigIntegerField(default=0)
+
+    creation = models.IntegerField(
+        default = GetCurrentTimestamp
     )
 
     class Meta:
+        managed = False
         db_table = 'players'
-        verbose_name = _('player')
-        verbose_name_plural = _('players')
 
     def __str__(self):
         return self.name
 
-    def check_is_banned(self):
-        for ban in self.banned_player.filter(active=True):
-            if ban.permament or not ban.has_expired:
-                return True
-        return False
+    # def check_is_banned(self):
+    #     for ban in self.banned_player.filter(active=True):
+    #         if ban.permament or not ban.has_expired:
+    #             return True
+    #     return False
+    #
+    # def get_active_bans(self):
+    #     return self.banned_player.filter(active=True)
+    #
+    # def get_ban_info(self):
+    #     for ban in self.get_active_bans():
+    #         if ban.permament:
+    #             return str(_(
+    #                 'This player has been permamently banned.\n'
+    #                 'Ban reason: {reason}.'
+    #             ).format(
+    #                 reason = ban.get_reason_display()
+    #             ))
+    #         if not ban.has_expired:
+    #             return str(_(
+    #                 'This player has been banned.\n'
+    #                 'Ban reason: {reason}.\n'
+    #                 'Ban expires: {expires}.'
+    #             ).format(
+    #                 reason = ban.get_reason_display(),
+    #                 expires = GetLocalDateTime(ban.expires)
+    #             ))
+    #     return ''
 
-    def get_active_bans(self):
-        return self.banned_player.filter(active=True)
-
-    def get_ban_info(self):
-        for ban in self.get_active_bans():
-            if ban.permament:
-                return str(_(
-                    'This player has been permamently banned.\n'
-                    'Ban reason: {reason}.'
-                ).format(
-                    reason = ban.get_reason_display()
-                ))
-            if not ban.has_expired:
-                return str(_(
-                    'This player has been banned.\n'
-                    'Ban reason: {reason}.\n'
-                    'Ban expires: {expires}.'
-                ).format(
-                    reason = ban.get_reason_display(),
-                    expires = GetLocalDateTime(ban.expires)
-                ))
-        return ''
-
-class PlayerGroup(models.Model):
-    
-    name = models.CharField(
-        max_length = 30, 
-        unique = True
-    )
-    
-    access = models.PositiveIntegerField(
-        default = 0
-    )
-    
-    flags = models.IntegerField(
-        default = 0
-    )
-    
-    max_depot_items = models.PositiveSmallIntegerField(
-        default = 1000
-    )
-    
-    max_vip_list = models.PositiveSmallIntegerField(
-        default = 50
-    )
+class PlayerNamelock(models.Model):
+    player = models.OneToOneField('players.Player', models.CASCADE, primary_key=True, related_name='namelocked_player')
+    reason = models.CharField(max_length=255)
+    namelocked_at = models.BigIntegerField()
+    namelocked_by = models.ForeignKey('players.Player', models.SET_NULL, null=True, db_column='namelocked_by')
 
     class Meta:
-        db_table = 'player_groups'
-        verbose_name = _('group')
-        verbose_name_plural = _('groups')
+        managed = False
+        db_table = 'player_namelocks'
 
-    def __str__(self):
-        return self.name
-
-"""
-class PlayerVipList(models.Model):
-    
-    player = models.ForeignKey(
-        'players.Player', 
-        on_delete = models.CASCADE,
-        db_index = True
-    )
-    
-    vip_player = models.ForeignKey(
-        'players.Player', 
-        on_delete = models.CASCADE, 
-        related_name = 'vip_player',
-        db_index = True
-    )
+class PlayerDeath(models.Model):
+    player = models.ForeignKey('players.Player', models.CASCADE)
+    time = models.BigIntegerField()
+    level = models.IntegerField()
+    killed_by = models.CharField(max_length=255)
+    is_player = models.IntegerField()
+    mostdamage_by = models.CharField(max_length=100)
+    mostdamage_is_player = models.IntegerField()
+    unjustified = models.IntegerField()
+    mostdamage_unjustified = models.IntegerField()
 
     class Meta:
-        db_table = 'player_viplist'
-        unique_together = ['player', 'vip_player']
-        verbose_name = _('VIP list')
-        verbose_name_plural = _('VIP lists')
+        managed = False
+        db_table = 'player_deaths'
 
-    def __str__(self):
-        return '%s -> %s' % (
-            self.player.name, self.vip_player.name
-        )
-"""
+class PlayerDepotItem(models.Model):
+    player = models.ForeignKey('players.Player', models.CASCADE)
+    sid = models.IntegerField()
+    pid = models.IntegerField()
+    itemtype = models.SmallIntegerField()
+    count = models.SmallIntegerField()
+    attributes = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'player_depotitems'
+        unique_together = (('player', 'sid'),)
+
+class PlayerInboxItem(models.Model):
+    player = models.ForeignKey('players.Player', models.CASCADE)
+    sid = models.IntegerField()
+    pid = models.IntegerField()
+    itemtype = models.SmallIntegerField()
+    count = models.SmallIntegerField()
+    attributes = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'player_inboxitems'
+        unique_together = (('player', 'sid'),)
+
+class PlayerItem(models.Model):
+    player = models.ForeignKey('players.Player', models.CASCADE)
+    pid = models.IntegerField()
+    sid = models.IntegerField()
+    itemtype = models.SmallIntegerField()
+    count = models.SmallIntegerField()
+    attributes = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'player_items'
 
 class PlayerSpell(models.Model):
-    
-    player = models.ForeignKey(
-        'players.Player', 
-        on_delete = models.CASCADE,
-        db_index = True
-    )
-    
-    words = models.CharField(
-        max_length = 30
-    )
+    player = models.ForeignKey('players.Player', models.DO_NOTHING)
+    name = models.CharField(max_length=255)
 
     class Meta:
+        managed = False
         db_table = 'player_spells'
-        unique_together = ['player', 'words']
-        verbose_name = _('spell')
-        verbose_name_plural = _('spells')
-
-    def __str__(self):
-        return '%s -> %s' % (
-            self.player.name, self.words
-        )
 
 class PlayerStorage(models.Model):
-    
-    player = models.ForeignKey(
-        'players.Player', 
-        on_delete = models.CASCADE,
-        db_index = True
-    )
-    
-    key = models.PositiveSmallIntegerField()
-    
+    player = models.ForeignKey('players.Player', models.DO_NOTHING)
+    key = models.IntegerField()
     value = models.IntegerField()
 
     class Meta:
+        managed = False
         db_table = 'player_storage'
-        unique_together = ['player', 'key']
-        verbose_name = _('storage')
-        verbose_name_plural = _('storages')
-
-    def __str__(self):
-        return '%s -> %d: %d' % (
-            self.player.name, self.key, self.value
-        )
-
-class PlayerSkill(models.Model):
-    
-    player = models.ForeignKey(
-        'players.Player', 
-        on_delete = models.CASCADE,
-        db_index = True
-    )
-    
-    skill_id = models.PositiveSmallIntegerField()
-    
-    value = models.PositiveIntegerField(
-        default = 0
-    )
-    
-    count = models.PositiveIntegerField(
-        default = 0
-    )
-
-    class Meta:
-        db_table = 'player_skills'
-        unique_together = ['player', 'skill_id']
-        verbose_name = _('skill')
-        verbose_name_plural = _('skills')
-
-    def __str__(self):
-        return '%s (skill_id: %d, value: %d, count: %d)' % (
-            self.player.name, self.skill_id, self.value, self.count
-        )
-
-class PlayerItem(models.Model):
-    
-    player = models.ForeignKey(
-        'players.Player', 
-        on_delete = models.CASCADE,
-        db_index = True
-    )
-    
-    s_id = models.IntegerField()
-    
-    p_id = models.IntegerField(
-        default = 0
-    )
-    
-    item_type = models.PositiveIntegerField()
-    
-    count = models.PositiveSmallIntegerField(
-        default = 0
-    )
-    
-    attributes = models.BinaryField(
-        default = b''
-    )
-
-    class Meta:
-        db_table = 'player_items'
-        unique_together = ['player', 's_id']
-        verbose_name = _('item')
-        verbose_name_plural = _('items')
-
-    def __str__(self):
-        return '%s (s_id: %d, p_id: %d, item_type: %d, count: %d)' % (
-            self.player.name, self.s_id, self.p_id, self.item_type, self.count
-        )
-
-class PlayerDepotItem(models.Model):
-    
-    player = models.ForeignKey(
-        'players.Player', 
-        on_delete = models.CASCADE,
-        db_index = True
-    )
-    
-    depot_id = models.PositiveSmallIntegerField(
-        default = 0
-    )
-    
-    s_id = models.IntegerField()
-    
-    p_id = models.IntegerField(default = 0)
-    
-    item_type = models.IntegerField()
-    
-    count = models.IntegerField(default = 0)
-    
-    attributes = models.BinaryField(
-        default = b''
-    )
-
-    class Meta:
-        db_table = 'player_depotitems'
-        unique_together = ['player', 's_id']
-        verbose_name = _('depot item')
-        verbose_name_plural = _('depot items')
-
-    def __str__(self):
-        return '%s (s_id: %d, p_id: %d, item_type: %d, count: %d)' % (
-            self.player.name, self.s_id, self.p_id, self.item_type, self.count
-        )
+        unique_together = (('player', 'key'),)

@@ -17,7 +17,7 @@ class ProfileView(LoginRequiredMixin, views.TemplateView):
     template_name = 'accounts/profile.html'
 
     def get(self, request, *args, **kwargs):
-        account = request.user
+        account = request.user.account
 
         kwargs.update({
             'account': account,
@@ -58,7 +58,7 @@ class LoginView(CustomFormView):
 
     def form_valid(self, form):
         
-        login(self.request, form.account)
+        login(self.request, form.account.user)
         
         return super(LoginView, self).form_valid(form)
 
@@ -87,17 +87,17 @@ class RegisterView(CustomFormView):
 
         account = form.save()
 
-        if account.email:
-            activation_link = '{scheme}://{host}{url}?user={user}&key={key}'.format(
-                scheme = self.request.scheme,
-                host = self.request.get_host(),
-                url = reverse('accounts:email-activation'),
-                user = account.username,
-                key = account.email_activation_key
-            )
-
-            # TODO: send activation link to account.email
-            print(activation_link)
+        # if account.email:
+        #     activation_link = '{scheme}://{host}{url}?user={user}&key={key}'.format(
+        #         scheme = self.request.scheme,
+        #         host = self.request.get_host(),
+        #         url = reverse('accounts:email-activation'),
+        #         user = account.name,
+        #         key = account.emailactivation.key
+        #     )
+        #
+        #     # TODO: send activation link to account.email
+        #     print(activation_link)
 
         return self.render_success(
             account = account
@@ -111,7 +111,7 @@ class PasswordChangeView(LoginRequiredMixin, CustomFormView):
 
     def get_form_kwargs(self):
         kwargs = super(PasswordChangeView, self).get_form_kwargs()
-        kwargs['instance'] = self.request.user
+        kwargs['instance'] = self.request.user.account
         return kwargs
 
     def form_valid(self, form):
@@ -120,7 +120,7 @@ class PasswordChangeView(LoginRequiredMixin, CustomFormView):
         form.save()
 
         # Relogin user that requested password change
-        login(self.request, form.instance)
+        login(self.request, self.request.user)
 
         return self.render_success(
             next = reverse('accounts:profile')

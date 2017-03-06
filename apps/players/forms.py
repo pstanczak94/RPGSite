@@ -19,11 +19,11 @@ class CreateForm(forms.ModelForm):
     
     class Meta:
         model = Player
-        fields = ['name', 'sex', 'vocation', 'town']
+        fields = ['name', 'sex', 'vocation', 'town_id']
         widgets = {
             'sex': RadioSelect(),
             'vocation': RadioSelect(),
-            'town': RadioSelect(),
+            'town_id': RadioSelect(),
         }
         
     name = CharField(

@@ -20,6 +20,11 @@ def StringCrop(text, max_len):
     else:
         return text
 
+from django.utils import timezone
+
+def GetCurrentTimestamp():
+    return int(timezone.now().timestamp())
+
 from django.conf import settings
 
 def GetLogger():

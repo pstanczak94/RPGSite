@@ -30,7 +30,7 @@
 				<div class="profile-td-container">
 					<h1 class="text-center">{% trans "Information" %}</h1>
 
-					<p><strong>{% trans "Username" %}:</strong> {{ account.username }}</p>
+					<p><strong>{% trans "Username" %}:</strong> {{ account.name }}</p>
 
 					{% if account.get_full_name %}
 						<p><strong>{% trans "Full name" %}:</strong> {{ account.get_full_name }}</p>

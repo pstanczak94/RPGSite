@@ -21,22 +21,22 @@ class CreateView(LoginRequiredMixin, tools_views.CustomFormView):
     
     def get_form(self, form_class=None):
         form = super(CreateView, self).get_form(form_class=form_class)
-        form.account = self.request.user
+        form.account = self.request.user.account
         return form
     
     def form_valid(self, form):
         name = form.cleaned_data.get('name')
         sex = form.cleaned_data.get('sex')
         vocation = form.cleaned_data.get('vocation')
-        town = form.cleaned_data.get('town')
+        town_id = form.cleaned_data.get('town_id')
         
-        account = self.request.user
+        account = self.request.user.account
         
         player = account.players.create(
             name = name,
             sex = sex,
             vocation = vocation,
-            town = town
+            town_id = town_id
         )
         
         return self.render_success(
@@ -49,7 +49,7 @@ class DeleteView(LoginRequiredMixin, django_views.DeleteView):
     success_url = reverse_lazy('accounts:profile')
     
     def _check_player(self, request):
-        if self.get_object().account != request.user:
+        if self.get_object().account != request.user.account:
             raise Http404(_('You can\'t delete this character.'))
     
     def get(self, request, *args, **kwargs):

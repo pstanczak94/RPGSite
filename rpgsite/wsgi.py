@@ -18,12 +18,12 @@ application = get_wsgi_application()
 from apps.accounts.models import Account
 from apps.tools.tools import LogError, LogInfo
 
-if not Account.objects.username_exists('root'):
+if not Account.objects.name_exists('root'):
     try:
-        Account.objects.create_superuser(
-            username = 'root',
+        Account.objects.create_admin(
+            name = 'root',
             password = 'rpgsite',
-            email = '',
+            email = 'root@rpgsite.pl',
         )
     except Exception as e:
         LogError('Root user creation error: ' + repr(e))

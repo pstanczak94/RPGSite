@@ -36,61 +36,40 @@ class LoginForm(AutoFocusFormMixin, forms.Form):
         placeholder = _('Type your password here'),
         widget = forms.PasswordInput(),
     )
-    
-    def __init__(self, *args, **kwargs):
-        super(LoginForm, self).__init__(*args, **kwargs)
-        self.account = None
 
     def clean(self):
-        data = super(LoginForm, self).clean()
+        super(LoginForm, self).clean()
 
-        if not self.is_valid():
-            return data
+        if self.is_valid():
+            username = self.cleaned_data.get('username')
+            password = self.cleaned_data.get('password')
 
-        username = data.get('username')
-        password = data.get('password')
+            try:
+                account = Account.objects.get_by_natural_key(username)
+            except Account.DoesNotExist:
+                self.add_form_error(_('Account with that name does not exist.'), 'username')
+            else:
+                if not account.user.check_password(password):
+                    self.add_form_error(_('Password does not match.'), 'password')
+                elif not account.user.is_active:
+                    self.add_form_error(_('This account is blocked or deleted.'))
+                else:
+                    self.account = account
 
-        user = authenticate(username=username, password=password)
-
-        try:
-            account = Account.objects.get_by_natural_key(username)
-        except Account.DoesNotExist:
-            self.add_form_error(_('Account with that name does not exist.'), 'username')
-            return data
-
-        if not account.check_password(password):
-            self.add_form_error(_('Password does not match.'), 'password')
-            return data
-
-        if not account.is_active:
-            self.add_form_error(_('This account is blocked or deleted.'))
-            return data
-
-        ban_info = account.get_ban_info()
-
-        if ban_info:
-            self.add_form_error(ban_info)
-            return data
-
-        if not user:
-            self.add_form_error(_('Account authentication failed.'))
-            return data
-
-        self.account = account
-        return data
+        return self.cleaned_data
 
 class RegisterForm(CustomModelForm):
     autofocus_post_clean = True
 
     class Meta:
         model = Account
-        fields = ['username', 'password', 'password_repeat', 'email']
+        fields = ['name', 'password', 'password_repeat', 'email']
 
-    username = CharField(
+    name = CharField(
         autofocus = True,
-        label = _('Username'),
-        placeholder = _('Type your username here'),
-        help_text = Account._meta.get_field('username').help_text,
+        label = _('Account name'),
+        placeholder = _('Type your account name here'),
+        help_text = Account._meta.get_field('name').help_text,
         min_length = settings.INPUT_USERNAME_MIN_LENGTH,
         max_length = settings.INPUT_USERNAME_MAX_LENGTH,
         widget = TextInput(),
@@ -122,8 +101,8 @@ class RegisterForm(CustomModelForm):
     )
 
     def save(self, commit=True):
-        self.instance = Account.objects.create_user(
-            username = self.cleaned_data.get('username'),
+        self.instance = Account.objects.create_account(
+            name = self.cleaned_data.get('name'),
             password = self.cleaned_data.get('password'),
             email = self.cleaned_data.get('email')
         )
@@ -182,7 +161,6 @@ class PasswordChangeForm(CustomModelForm):
 
     def save(self, commit=True):
         self.instance.change_password(
-            self.cleaned_data.get('current_password'),
             self.cleaned_data.get('new_password')
         )
         return self.instance
@@ -212,9 +190,9 @@ class EmailVerificationForm(CustomModelForm):
 
     class Meta:
         model = Account
-        fields = ['username', 'activation_key']
+        fields = ['name', 'activation_key']
 
-    username = CharField(
+    name = CharField(
         required = False,
         min_length = settings.INPUT_USERNAME_MIN_LENGTH,
         max_length = settings.INPUT_USERNAME_MAX_LENGTH,
@@ -238,11 +216,11 @@ class EmailVerificationForm(CustomModelForm):
     def clean(self):
         super(EmailVerificationForm, self).clean()
 
-        username = self.cleaned_data.get('username')
+        name = self.cleaned_data.get('name')
         activation_key = self.cleaned_data.get('activation_key')
 
         try:
-            account = Account.objects.get_by_natural_key(username)
+            account = Account.objects.get_by_natural_key(name)
         except Account.DoesNotExist:
             self.add_error(None, _('Account doesn\'t exist, verification failed.'))
         else:
