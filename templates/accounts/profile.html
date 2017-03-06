@@ -27,34 +27,39 @@
 	<table class="profile-table">
 		<tr class="profile-tr">
 			<td id="profile-td-1">
-				<h1 class="text-center">{% trans "Information" %}</h1>
-				
-				<p><strong>{% trans "Username" %}:</strong> {{ account.username }}</p>
-			
-				{% if account.get_full_name %}
-					<p><strong>{% trans "Full name" %}:</strong> {{ account.get_full_name }}</p>
-				{% endif %}
-				
-				{% if account.email %}
-					<p><strong>{% trans "Email" %}:</strong> {{ account.email }}</p>
-					<p>
-					{% if not account.email_activated %}
-						{% emoji 'exclamation' %}
-						<a id="email-not-activated" href="{% url 'accounts:email-activation' %}">
-							{% trans "Email is not activated" %}
-						</a>
-						{% emoji 'exclamation' %}
-					{% else %}
-						<span id="email-activated">
-							{% trans "Email is activated." %}
-						</span>
+				<div class="profile-td-container">
+					<h1 class="text-center">{% trans "Information" %}</h1>
+
+					<p><strong>{% trans "Username" %}:</strong> {{ account.username }}</p>
+
+					{% if account.get_full_name %}
+						<p><strong>{% trans "Full name" %}:</strong> {{ account.get_full_name }}</p>
 					{% endif %}
-					</p>
-				{% else %}
-					<p id="email-not-configured">
-						{% trans "Email is not configured." %}
-					</p>
-				{% endif %}
+
+					{% if account.email %}
+						<p>
+							<strong>{% trans "Email" %}:</strong>
+							<span title="{{ account.email }}">{{ account.email }}</span>
+						</p>
+						<p>
+						{% if not account.email_activated %}
+							{% emoji 'exclamation' %}
+							<a id="email-not-activated" href="{% url 'accounts:email-activation' %}">
+								{% trans "Email is not activated" %}
+							</a>
+							{% emoji 'exclamation' %}
+						{% else %}
+							<span id="email-activated">
+								{% trans "Email is activated." %}
+							</span>
+						{% endif %}
+						</p>
+					{% else %}
+						<p id="email-not-configured">
+							{% trans "Email is not configured." %}
+						</p>
+					{% endif %}
+				</div>
 			</td>
 			<td id="profile-td-2">
 				<div class="text-center">

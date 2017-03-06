@@ -12,6 +12,7 @@ RPGSITE_NAVIGATION = [
     NavigationItem(_('Create account'), 'accounts:create'),
     NavigationItem(_('Profile'), 'accounts:profile'),
     NavigationItem(_('Administration'), 'admin:index'),
+#   NavigationItem(_('Create player'), 'players:create'),
 ]
 
 def navigation_context_processor(request):

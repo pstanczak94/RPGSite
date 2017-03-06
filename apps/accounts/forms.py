@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from apps.accounts.models import get_password_help_text
-from apps.tools.forms import AutoFocusFormMixin, CharField, CustomModelForm
+from apps.tools.forms import AutoFocusFormMixin, CharField, CustomModelForm, EmailField
 
 from .models import Account
 
@@ -85,35 +85,40 @@ class RegisterForm(CustomModelForm):
     class Meta:
         model = Account
         fields = ['username', 'password', 'password_repeat', 'email']
-        widgets = {
-            'password' : PasswordInput(),
-        }
-        widget_attrs = {
-            'username': {
-                'placeholder': _('Type your username here'),
-                'minlength': settings.INPUT_USERNAME_MIN_LENGTH,
-                'maxlength': settings.INPUT_USERNAME_MAX_LENGTH,
-                'autofocus': ''
-            },
-            'password': {
-                'placeholder': _('Type your password here'),
-                'minlength': settings.INPUT_PASSWORD_MIN_LENGTH,
-                'maxlength': settings.INPUT_PASSWORD_MAX_LENGTH
-            },
-            'password_repeat': {
-                'placeholder': _('Repeat your password here'),
-                'minlength': settings.INPUT_PASSWORD_MIN_LENGTH,
-                'maxlength': settings.INPUT_PASSWORD_MAX_LENGTH
-            },
-            'email': {
-                'placeholder': _('Type your email here (not required)')
-            },
-        }
+
+    username = CharField(
+        autofocus = True,
+        label = _('Username'),
+        placeholder = _('Type your username here'),
+        help_text = Account._meta.get_field('username').help_text,
+        min_length = settings.INPUT_USERNAME_MIN_LENGTH,
+        max_length = settings.INPUT_USERNAME_MAX_LENGTH,
+        widget = TextInput(),
+    )
+
+    password = CharField(
+        label = _('Password'),
+        placeholder = _('Type your password here'),
+        help_text = Account._meta.get_field('password').help_text,
+        min_length = settings.INPUT_PASSWORD_MIN_LENGTH,
+        max_length = settings.INPUT_PASSWORD_MAX_LENGTH,
+        widget = PasswordInput(),
+    )
 
     password_repeat = CharField(
         label = _('Repeat password'),
+        placeholder = _('Repeat your password here'),
         help_text = _('This password needs to match above.'),
-        widget = PasswordInput()
+        min_length = settings.INPUT_PASSWORD_MIN_LENGTH,
+        max_length = settings.INPUT_PASSWORD_MAX_LENGTH,
+        widget = PasswordInput(),
+    )
+
+    email = EmailField(
+        label = _('Email address'),
+        placeholder = _('Type your email address here'),
+        help_text = Account._meta.get_field('email').help_text,
+        widget = EmailInput(),
     )
 
     def save(self, commit=True):
