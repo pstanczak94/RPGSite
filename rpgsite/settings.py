@@ -32,6 +32,8 @@ SECRET_KEY = '^pk_pdf!!av9q-au8=$yx@vpvq^9qzu^$#g4dm9-!+2zm#3@y('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+USE_WHITENOISE = IS_WINDOWS and not DEBUG
+
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
@@ -42,12 +44,6 @@ if IS_LINUX:
     SECRET_DIR = '/var/www/rpgsite'
 else:
     SECRET_DIR = os.path.join(BASE_DIR, 'secret')
-
-# Use MySQL or SQLite ?
-DATABASES_USING = 'mysql'
-
-# Use WhiteNoise for static files ?
-USE_WHITENOISE = IS_WINDOWS and not DEBUG
 
 # Application definition
 
@@ -107,8 +103,8 @@ WSGI_APPLICATION = 'rpgsite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-DATABASES_CONFIG = {
-    'MYSQL': {
+DATABASES = {
+    'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
             'read_default_file': os.path.join(SECRET_DIR, 'database', 'mysql.ini'),
@@ -117,13 +113,11 @@ DATABASES_CONFIG = {
                 'SET sql_mode=STRICT_TRANS_TABLES; ',
         },
     },
-    'SQLITE': {
+    'sqlite': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(SECRET_DIR, 'database', 'rpgsite.db'),
     },
 }
-
-DATABASES = { 'default': DATABASES_CONFIG.get(DATABASES_USING.upper()) }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
@@ -168,19 +162,22 @@ INPUT_PASSWORD_MAX_LENGTH = 50
 INPUT_EMAIL_MIN_LENGTH = 3
 INPUT_EMAIL_MAX_LENGTH = 254
 
-CHARACTER_NAME_MIN_LENGTH = 6
+CHARACTER_NAME_MIN_LENGTH = 3
 CHARACTER_NAME_MAX_LENGTH = 20
 CHARACTER_NAME_REGEX = r'^[a-zA-Z ]+$'
 
-# Account
-
-from datetime import timedelta
+# Accounts
 
 # AUTH_USER_MODEL = 'accounts.Account'
 
-EMAIL_VERIFICATION_TIME = timedelta(days=2)
+import datetime
+
+EMAIL_VERIFICATION_TIME = datetime.timedelta(days=2)
 
 MAX_PLAYERS_PER_ACCOUNT = 4
+
+# Create root account and player
+CREATE_ROOT_ON_INIT = True
 
 # Login and logout
 
@@ -189,25 +186,25 @@ LOGOUT_URL = '/accounts/logout/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# Email
-
-EMAIL_USE_CONFIG_FILE = True
-EMAIL_CONFIG_FILE = os.path.join(SECRET_DIR, 'email-config.ini')
-EMAIL_CONFIG_SECTION = 'default'
+# Email server configuration
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'user@example.com'
+EMAIL_HOST_USER = 'username@gmail.com'
 EMAIL_HOST_PASSWORD = 'password'
 
+EMAIL_USE_CONFIG_FILE = False
+EMAIL_CONFIG_FILE = os.path.join(SECRET_DIR, 'emails.ini')
+
 if EMAIL_USE_CONFIG_FILE:
+    # Read config from `secret/emails.ini` file
     try:
         from configparser import ConfigParser
         with open(EMAIL_CONFIG_FILE, 'r') as file:
             config = ConfigParser()
             config.read_string(file.read())
-            section = EMAIL_CONFIG_SECTION
+            section = 'default'
             if config.has_option(section, 'host'):
                 EMAIL_HOST = str(config.get(section, 'host'))
             if config.has_option(section, 'port'):
@@ -219,7 +216,7 @@ if EMAIL_USE_CONFIG_FILE:
             if config.has_option(section, 'pass'):
                 EMAIL_HOST_PASSWORD = str(config.get(section, 'pass'))
             del config, section
-    except Exception as e:
+    except:
         print('Email config ini was not loaded correctly!')
 
 # Password validation
@@ -249,7 +246,7 @@ AUTH_PASSWORD_VALIDATORS = [
     # },
 ]
 
-# Logging to file
+# Logging to `secret/logs/rpgsite.log` file
 
 LOG_FILENAME = os.path.join(SECRET_DIR, 'logs', 'rpgsite.log')
 LOG_LEVEL = 'DEBUG'
@@ -321,18 +318,19 @@ LOGGING = {
     }
 }
 
-# Emoji
+# django-emoji configuration
 
 EMOJI_IMG_TAG = '<img src="{0}" alt="{1}" title="{2}" class="emoji" />'
 EMOJI_ALT_AS_UNICODE = True
 EMOJI_REPLACE_HTML_ENTITIES = True
 
-# Other useful settings
+# Other misc settings
 
 TOOLS_LOGGER_NAME = 'rpgsite'
 BEAUTIFULSOUP_PARSER = 'lxml'
 
-# WhiteNoise
+# WhiteNoise configuration
+# (used for serving static files when DEBUG=False)
 
 if USE_WHITENOISE:
     _index_1 = INSTALLED_APPS.index('django.contrib.staticfiles')

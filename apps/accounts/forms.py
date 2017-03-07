@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from apps.accounts.models import get_password_help_text
 from apps.tools.forms import AutoFocusFormMixin, CharField, CustomModelForm, EmailField
+from rpgsite.tools import GetSetting
 
 from .models import Account
 
@@ -22,16 +23,16 @@ class LoginForm(AutoFocusFormMixin, forms.Form):
 
     username = CharField(
         autofocus = True,
-        min_length = settings.INPUT_USERNAME_MIN_LENGTH,
-        max_length = settings.INPUT_USERNAME_MAX_LENGTH,
+        min_length = GetSetting('INPUT_USERNAME_MIN_LENGTH'),
+        max_length = GetSetting('INPUT_USERNAME_MAX_LENGTH'),
         label = _('Username'),
         placeholder = _('Type your username here'),
         widget = forms.TextInput(),
     )
 
     password = CharField(
-        min_length = settings.INPUT_PASSWORD_MIN_LENGTH,
-        max_length = settings.INPUT_PASSWORD_MAX_LENGTH,
+        min_length = GetSetting('INPUT_PASSWORD_MIN_LENGTH'),
+        max_length = GetSetting('INPUT_PASSWORD_MAX_LENGTH'),
         label = _('Password'),
         placeholder = _('Type your password here'),
         widget = forms.PasswordInput(),
@@ -70,8 +71,8 @@ class RegisterForm(CustomModelForm):
         label = _('Account name'),
         placeholder = _('Type your account name here'),
         help_text = Account._meta.get_field('name').help_text,
-        min_length = settings.INPUT_USERNAME_MIN_LENGTH,
-        max_length = settings.INPUT_USERNAME_MAX_LENGTH,
+        min_length = GetSetting('INPUT_USERNAME_MIN_LENGTH'),
+        max_length = GetSetting('INPUT_USERNAME_MAX_LENGTH'),
         widget = TextInput(),
     )
 
@@ -79,8 +80,8 @@ class RegisterForm(CustomModelForm):
         label = _('Password'),
         placeholder = _('Type your password here'),
         help_text = Account._meta.get_field('password').help_text,
-        min_length = settings.INPUT_PASSWORD_MIN_LENGTH,
-        max_length = settings.INPUT_PASSWORD_MAX_LENGTH,
+        min_length = GetSetting('INPUT_PASSWORD_MIN_LENGTH'),
+        max_length = GetSetting('INPUT_PASSWORD_MAX_LENGTH'),
         widget = PasswordInput(),
     )
 
@@ -88,8 +89,8 @@ class RegisterForm(CustomModelForm):
         label = _('Repeat password'),
         placeholder = _('Repeat your password here'),
         help_text = _('This password needs to match above.'),
-        min_length = settings.INPUT_PASSWORD_MIN_LENGTH,
-        max_length = settings.INPUT_PASSWORD_MAX_LENGTH,
+        min_length = GetSetting('INPUT_PASSWORD_MIN_LENGTH'),
+        max_length = GetSetting('INPUT_PASSWORD_MAX_LENGTH'),
         widget = PasswordInput(),
     )
 
@@ -136,8 +137,8 @@ class PasswordChangeForm(CustomModelForm):
         label = _('Current password'),
         placeholder = _('Type your current password here'),
         help_text = _('For security reasons you need to type your current password.'),
-        min_length = settings.INPUT_PASSWORD_MIN_LENGTH,
-        max_length = settings.INPUT_PASSWORD_MAX_LENGTH,
+        min_length = GetSetting('INPUT_PASSWORD_MIN_LENGTH'),
+        max_length = GetSetting('INPUT_PASSWORD_MAX_LENGTH'),
         widget = forms.PasswordInput(),
     )
 
@@ -145,8 +146,8 @@ class PasswordChangeForm(CustomModelForm):
         label = _('New password'),
         placeholder = _('Type your new password here'),
         help_text = get_password_help_text(),
-        min_length = settings.INPUT_PASSWORD_MIN_LENGTH,
-        max_length = settings.INPUT_PASSWORD_MAX_LENGTH,
+        min_length = GetSetting('INPUT_PASSWORD_MIN_LENGTH'),
+        max_length = GetSetting('INPUT_PASSWORD_MAX_LENGTH'),
         widget = forms.PasswordInput(),
     )
 
@@ -154,8 +155,8 @@ class PasswordChangeForm(CustomModelForm):
         label = _('Repeat new password'),
         placeholder = _('Repeat your new password here'),
         help_text = _('This password needs to match above.'),
-        min_length = settings.INPUT_PASSWORD_MIN_LENGTH,
-        max_length = settings.INPUT_PASSWORD_MAX_LENGTH,
+        min_length = GetSetting('INPUT_PASSWORD_MIN_LENGTH'),
+        max_length = GetSetting('INPUT_PASSWORD_MAX_LENGTH'),
         widget = forms.PasswordInput(),
     )
 
@@ -194,8 +195,8 @@ class EmailVerificationForm(CustomModelForm):
 
     name = CharField(
         required = False,
-        min_length = settings.INPUT_USERNAME_MIN_LENGTH,
-        max_length = settings.INPUT_USERNAME_MAX_LENGTH,
+        min_length = GetSetting('INPUT_USERNAME_MIN_LENGTH'),
+        max_length = GetSetting('INPUT_USERNAME_MAX_LENGTH'),
         widget = forms.HiddenInput(),
     )
 

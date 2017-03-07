@@ -3,7 +3,7 @@ from django.forms.widgets import TextInput, EmailInput, PasswordInput
 
 register = template.Library()
 
-from apps.tools import tools
+from rpgsite import tools
 
 from django.utils.safestring import mark_safe
 from django.template.defaultfilters import date as format_date

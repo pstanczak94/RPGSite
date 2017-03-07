@@ -9,6 +9,9 @@ from django.forms.widgets import RadioSelect, TextInput
 from apps.tools.forms import CharField, BootstrapTextInput
 from django.core.validators import RegexValidator
 
+from rpgsite.tools import GetSetting
+
+
 def character_name_fixer(name):
     name = name.strip()
     name = re.sub('\s+', ' ', name)
@@ -28,11 +31,11 @@ class CreateForm(forms.ModelForm):
         
     name = CharField(
         autofocus = True,
-        min_length = settings.CHARACTER_NAME_MIN_LENGTH,
-        max_length = settings.CHARACTER_NAME_MAX_LENGTH,
+        min_length = GetSetting('CHARACTER_NAME_MIN_LENGTH'),
+        max_length = GetSetting('CHARACTER_NAME_MAX_LENGTH'),
         validators = [
             RegexValidator(
-                settings.CHARACTER_NAME_REGEX,
+                GetSetting('CHARACTER_NAME_REGEX'),
                 _('Character name contains illegal characters.'),
                 'invalid-name'
             )

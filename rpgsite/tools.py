@@ -27,8 +27,11 @@ def GetCurrentTimestamp():
 
 from django.conf import settings
 
+def GetSetting(name, default=None):
+    return getattr(settings, name, default)
+
 def GetLogger():
-    return logging.getLogger(settings.TOOLS_LOGGER_NAME)
+    return logging.getLogger(GetSetting('TOOLS_LOGGER_NAME', 'rpgsite'))
 
 def LogDebug(msg):
     GetLogger().debug(msg)

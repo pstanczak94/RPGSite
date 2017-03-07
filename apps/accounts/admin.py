@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 # from apps.accounts.models import AccountGroup
 # from .models import Account
-# from apps.tools.tools import GetPlayersWithLinks
+# from rpgsite.tools import GetPlayersWithLinks
 
 # class AccountAdmin(UserAdmin):
 #

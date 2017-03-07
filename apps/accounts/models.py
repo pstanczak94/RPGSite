@@ -1,13 +1,12 @@
+import hashlib
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator, RegexValidator, MaxLengthValidator
 from django.db import models
-from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-import hashlib
-
-from apps.tools.tools import CaseInsensitiveKwargs, GetCurrentTimestamp
+from rpgsite.tools import CaseInsensitiveKwargs, GetCurrentTimestamp, GetSetting
 
 
 def get_name_help_text():
@@ -15,8 +14,8 @@ def get_name_help_text():
         'Account name needs to be from {min} to {max} characters length.\n'
         'Allowed characters are: a-z, A-Z, 0-9.'
     ).format(
-        min=settings.INPUT_USERNAME_MIN_LENGTH,
-        max=settings.INPUT_USERNAME_MAX_LENGTH
+        min=GetSetting('INPUT_USERNAME_MIN_LENGTH'),
+        max=GetSetting('INPUT_USERNAME_MAX_LENGTH')
     )
 
 def get_password_help_text():
@@ -24,8 +23,8 @@ def get_password_help_text():
         'Password needs to be from {min} to {max} characters length.\n'
         'It can\'t be too common or contain only numbers.'
     ).format(
-        min=settings.INPUT_PASSWORD_MIN_LENGTH,
-        max=settings.INPUT_PASSWORD_MAX_LENGTH
+        min=GetSetting('INPUT_PASSWORD_MIN_LENGTH'),
+        max=GetSetting('INPUT_PASSWORD_MAX_LENGTH')
     )
 
 class AccountManager(models.Manager):
@@ -70,11 +69,11 @@ class Account(models.Model):
         help_text = get_name_help_text(),
         validators = [
             RegexValidator(
-                regex = settings.INPUT_USERNAME_REGEX,
+                regex = GetSetting('INPUT_USERNAME_REGEX'),
                 message = _('Account name may contain only english letters and digits.')
             ),
-            MinLengthValidator(settings.INPUT_USERNAME_MIN_LENGTH),
-            MaxLengthValidator(settings.INPUT_USERNAME_MAX_LENGTH)
+            MinLengthValidator(GetSetting('INPUT_USERNAME_MIN_LENGTH')),
+            MaxLengthValidator(GetSetting('INPUT_USERNAME_MAX_LENGTH'))
         ],
         error_messages = {
             'unique': _("An account with that name already exists."),
@@ -155,7 +154,7 @@ class Account(models.Model):
         self.save()
 
     def can_add_character(self):
-        return self.players.count() < settings.MAX_PLAYERS_PER_ACCOUNT
+        return self.players.count() < GetSetting('MAX_PLAYERS_PER_ACCOUNT')
 
     # def get_active_bans(self):
     #     return self.banned_account.filter(active=True)
@@ -230,7 +229,7 @@ class AccountBans(models.Model):
         db_table = 'account_bans'
 
 # def get_email_expiration_date():
-#     return timezone.now() + settings.EMAIL_VERIFICATION_TIME
+#     return timezone.now() + GetSetting('EMAIL_VERIFICATION_TIME')
 
 # class EmailActivation(models.Model):
 #

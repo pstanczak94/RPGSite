@@ -1,9 +1,7 @@
 from django.db import models
-
 from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
 
-from apps.tools.tools import CaseInsensitiveKwargs, GetLocalDateTime, GetCurrentTimestamp
+from rpgsite.tools import CaseInsensitiveKwargs, GetCurrentTimestamp
 
 class PlayerManager(models.Manager):
 

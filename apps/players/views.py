@@ -1,10 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
 
+from apps.tools.views import CustomFormView
 from .forms import CreateForm
 
 from django.views import generic as django_views
-from apps.tools import views as tools_views
 from apps.players.models import Player
 from django.urls.base import reverse_lazy
 from django.http.response import Http404
@@ -13,7 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 class IndexView(RedirectView):
     pattern_name = 'players:create'
 
-class CreateView(LoginRequiredMixin, tools_views.CustomFormView):
+class CreateView(LoginRequiredMixin, CustomFormView):
     form_class = CreateForm
     template_name = 'players/create.html'
     title = 'Character creation'

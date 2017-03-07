@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views import generic as views
 
 from apps.tools.views import CustomFormView
+from rpgsite.tools import GetSetting
 
 from . import forms
 
@@ -24,7 +25,7 @@ class ProfileView(LoginRequiredMixin, views.TemplateView):
             'players': account.players.all(),
             'players_count': account.players.count(),
             'can_add_player': account.can_add_character(),
-            'players_max': settings.MAX_PLAYERS_PER_ACCOUNT,
+            'players_max': GetSetting('MAX_PLAYERS_PER_ACCOUNT'),
         })
 
         return super(ProfileView, self).get(request, *args, **kwargs)

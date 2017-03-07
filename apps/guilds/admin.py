@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
-# from apps.tools.tools import GetPlayersWithLinks
+# from rpgsite.tools import GetPlayersWithLinks
 # from apps.guilds.models import Guild, GuildRank
 
 # @admin.register(Guild)
