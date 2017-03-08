@@ -1,24 +1,20 @@
 @echo off
 
-setlocal DisableDelayedExpansion
+setlocal EnableDelayedExpansion
 
 set ScriptPath=%~dp0
 set CurrentDrive=%ScriptPath:~0,2%
 
-for /f %%L in (%ScriptPath%\pythonpaths.txt) do (
-	set "line=%%L"
-	
-	setlocal EnableDelayedExpansion
-	
-	set iPythonPath=!line:{driveletter}=%CurrentDrive%!
-	
-	if exist !iPythonPath!\python.exe (
-		!iPythonPath!\python.exe %*
+for /f "tokens=*" %%L in (%ScriptPath%\pythonpaths.txt) do (
+	set line=%%L
+	set PythonPath=!line:{driveletter}=%CurrentDrive%!
+	if exist !PythonPath!\python.exe (
+		!PythonPath!\python.exe %*
 		exit /b
 	)
-	
-	endlocal
 )
+
+endlocal
 
 where /q python.exe
 
