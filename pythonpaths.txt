@@ -1,0 +1,3 @@
+C:\Python\v3.5.2-x86
+C:\Python35-32
+{driveletter}\WinPython35\python-3.5.3
