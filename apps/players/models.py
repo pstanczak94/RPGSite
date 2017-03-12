@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -48,29 +49,56 @@ class Player(models.Model):
         (5, _('Saund')),
     )
 
+    GROUP_CHOICES = (
+        (1, _('Player')),
+        (2, _('Gamemaster')),
+        (3, _('God')),
+    )
+
+    account = models.ForeignKey(
+        'accounts.Account',
+        on_delete = models.CASCADE,
+        related_name = 'players',
+    )
+
+    group_id = models.SmallIntegerField(
+        _('group'),
+        default = GROUP_CHOICES[0][0],
+        choices = GROUP_CHOICES,
+    )
+
     name = models.CharField(
         max_length = 30,
         unique = True,
     )
 
-    group_id = models.SmallIntegerField(
-        default = 1,
+    sex = models.PositiveSmallIntegerField(
+        default = SEX_CHOICES[0][0],
+        choices = SEX_CHOICES,
     )
 
-    account = models.ForeignKey(
-        'accounts.Account', 
-        on_delete = models.CASCADE,
-        related_name = 'players',
-    )
-
-    level = models.IntegerField(
-        default = 1,
-    )
-    
     vocation = models.SmallIntegerField(
         default = VOCATION_CHOICES[0][0],
         choices = VOCATION_CHOICES,
         db_index = True,
+    )
+
+    town_id = models.SmallIntegerField(
+        default = TOWN_CHOICES[0][0],
+        choices = TOWN_CHOICES,
+        verbose_name = 'town',
+    )
+
+    creation = models.IntegerField(
+        default = GetCurrentTimestamp,
+    )
+
+    def get_creation_display(self):
+        return str(datetime.fromtimestamp(self.creation))
+    get_creation_display.short_description = _('date created')
+
+    level = models.IntegerField(
+        default = 1,
     )
 
     health = models.IntegerField(
@@ -128,11 +156,6 @@ class Player(models.Model):
     soul = models.IntegerField(
         default = 0,
     )
-
-    town_id = models.SmallIntegerField(
-        default = TOWN_CHOICES[0][0],
-        choices = TOWN_CHOICES,
-    )
     
     posx = models.IntegerField(
         default = 0,
@@ -152,11 +175,6 @@ class Player(models.Model):
     
     cap = models.IntegerField(
         default = 150,
-    )
-
-    sex = models.PositiveSmallIntegerField(
-        default = SEX_CHOICES[0][0],
-        choices = SEX_CHOICES,
     )
 
     lastlogin = models.BigIntegerField(default=0)
@@ -186,10 +204,6 @@ class Player(models.Model):
     skill_shielding_tries = models.BigIntegerField(default=0)
     skill_fishing = models.IntegerField(default=10)
     skill_fishing_tries = models.BigIntegerField(default=0)
-
-    creation = models.IntegerField(
-        default = GetCurrentTimestamp
-    )
 
     class Meta:
         managed = False

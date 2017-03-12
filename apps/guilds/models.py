@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.db.models.signals import pre_delete, post_save
 from django.dispatch.dispatcher import receiver
+from django.utils.translation import ugettext_lazy as _
 
 # @receiver(pre_delete)
 # def guild_pre_delete(sender, instance, **kwargs):

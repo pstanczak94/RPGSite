@@ -1,13 +1,12 @@
 import hashlib
 
-from django.conf import settings
+from datetime import datetime
 from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator, RegexValidator, MaxLengthValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from rpgsite.tools import CaseInsensitiveKwargs, GetCurrentTimestamp, GetSetting
-
 
 def get_name_help_text():
     return _(
@@ -46,6 +45,7 @@ class AccountManager(models.Manager):
     def _create_account(self, user, name, email, password):
         account = self.model(user=user, name=name, email=email)
         account.set_password(password)
+        account.save()
         return account
 
     def create_account(self, name, email, password):
@@ -81,7 +81,7 @@ class Account(models.Model):
     )
 
     password = models.CharField(
-        _('password'),
+        _('hashed password'),
         max_length = 40,
         help_text = get_password_help_text(),
     )
@@ -93,8 +93,13 @@ class Account(models.Model):
     )
 
     creation = models.IntegerField(
+        _('creation timestamp'),
         default = GetCurrentTimestamp,
     )
+
+    def get_creation_display(self):
+        return str(datetime.fromtimestamp(self.creation))
+    get_creation_display.short_description = _('date created')
 
     access = models.IntegerField(
         _('access level'),
@@ -138,11 +143,12 @@ class Account(models.Model):
         return self.name
 
     @staticmethod
-    def make_password(raw_password):
+    def make_password_sha1(raw_password):
         return hashlib.sha1(raw_password.encode('utf-8')).hexdigest()
 
     def change_password(self, raw_password):
         self.set_password(raw_password)
+        self.save()
         self.user.set_password(raw_password)
         self.user.save()
 
@@ -150,8 +156,7 @@ class Account(models.Model):
         return self.user.check_password(raw_password)
 
     def set_password(self, raw_password):
-        self.password = Account.make_password(raw_password)
-        self.save()
+        self.password = Account.make_password_sha1(raw_password)
 
     def can_add_character(self):
         return self.players.count() < GetSetting('MAX_PLAYERS_PER_ACCOUNT')

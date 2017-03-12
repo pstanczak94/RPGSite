@@ -1,61 +1,72 @@
+from django.conf import settings
 from django.contrib import admin
-from django.utils.translation import ugettext as _
+from django import forms
 
-# from .models import Player, PlayerGroup, PlayerSkill, \
-#     PlayerDepotItem, PlayerItem, PlayerSpell, \
-#     PlayerStorage
-#
-# from django import forms
-# from apps.accounts.models import Account
-# from django.conf import settings
+from rpgsite.tools import CustomListFilter
+from .models import Player
+from apps.accounts.models import Account
 
-# class PlayerForm(forms.ModelForm):
-#
-#     class Meta:
-#         model = Player
-#         fields = '__all__'
-#
-# class PlayerAddForm(forms.ModelForm):
-#
-#     def clean(self):
-#         data = super(PlayerAddForm, self).clean()
-#
-#         if self.is_valid():
-#             account = Account.objects.get_by_natural_key(data['account'])
-#             if not account.can_add_character():
-#                 self.add_error('account', _(
-#                     'One account can only contain %(num)d players.'
-#                 ) % {
-#                     'num': settings.MAX_PLAYERS_PER_ACCOUNT,
-#                 })
-#
-#         return data
-#
-#     class Meta:
-#         model = Player
-#         fields = ['account', 'group_id', 'name', 'sex', 'vocation', 'town']
-#
-# @admin.register(Player)
-# class PlayerAdmin(admin.ModelAdmin):
-#
-#     def get_form(self, request, obj=None, **kwargs):
-#         self.form = self.change_form if obj else self.add_form
-#         return super(PlayerAdmin, self).get_form(request, obj, **kwargs)
-#
-#     add_form = PlayerAddForm
-#     change_form = PlayerForm
-#
-#     list_display = (
-#         'name', 'account', 'level', 'vocation', 'sex', 'created'
-#     )
-#
-#     list_filter = (
-#         'sex', 'vocation', 'guild', 'group_id'
-#     )
-#
-#     search_fields = ('name', 'last_ip', 'account__username', 'account__email')
-#
-#     ordering = ('name',)
+from django.utils.translation import ugettext_lazy as _
+
+class PlayerForm(forms.ModelForm):
+
+    class Meta:
+        model = Player
+        fields = '__all__'
+
+class PlayerAddForm(forms.ModelForm):
+
+    def clean(self):
+        super(PlayerAddForm, self).clean()
+
+        name = self.cleaned_data.get('account')
+
+        account = Account.objects.get_by_natural_key(name)
+
+        if not account.can_add_character():
+            self.add_error('account', _(
+                'One account can only contain %(num)d players.'
+            ) % {
+                'num': settings.MAX_PLAYERS_PER_ACCOUNT,
+            })
+
+        return self.cleaned_data
+
+    class Meta:
+        model = Player
+        fields = (
+            'account', 'group_id', 'name', 'sex', 'vocation', 'town_id',
+        )
+
+class PlayerAdmin(admin.ModelAdmin):
+
+    def get_form(self, request, obj=None, **kwargs):
+        self.form = self.change_form if obj else self.add_form
+        return super(PlayerAdmin, self).get_form(request, obj, **kwargs)
+
+    add_form = PlayerAddForm
+    change_form = PlayerForm
+
+    list_display = (
+        'name', 'account', 'level', 'vocation', 'sex', 'get_creation_display',
+    )
+
+    list_filter = (
+        'sex',
+        'vocation',
+        'group_id',
+        CustomListFilter('guildmembership__guild__name', _('guild name')),
+    )
+
+    search_fields = (
+        'name', 'last_ip', 'account__name', 'account__email',
+    )
+
+    ordering = (
+        'name',
+    )
+
+admin.site.register(Player, PlayerAdmin)
 
 # @admin.register(PlayerGroup)
 # class PlayerGroupAdmin(admin.ModelAdmin):

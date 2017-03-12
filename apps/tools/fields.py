@@ -1,5 +1,5 @@
-from django.db import models
 from django.core.validators import MinValueValidator
+from django.db import models
 
 def UnsignedIntField(*args, **kwargs):
     kwargs.setdefault('default', 0)
@@ -18,4 +18,3 @@ def IntField(*args, **kwargs):
 def BigIntField(*args, **kwargs):
     kwargs.setdefault('default', 0)
     return models.BigIntegerField(*args, **kwargs)
-

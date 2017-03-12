@@ -32,7 +32,7 @@ SECRET_KEY = '^pk_pdf!!av9q-au8=$yx@vpvq^9qzu^$#g4dm9-!+2zm#3@y('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-USE_WHITENOISE = IS_WINDOWS and not DEBUG
+USE_WHITENOISE = False
 
 ALLOWED_HOSTS = [
     'localhost',

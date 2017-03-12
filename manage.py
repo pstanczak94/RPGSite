@@ -1,4 +1,4 @@
-#! python3.6-32
+#! python3.5-32
 
 import os, sys
 

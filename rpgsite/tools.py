@@ -69,3 +69,13 @@ def GetPlayersWithLinks(iterable, sep=', ', empty_value='-', pattern='admin:play
             )
         )
     return mark_safe(sep.join(html)) if html else empty_value
+
+from django.contrib import admin
+
+def CustomListFilter(name, title):
+    class ListFilterWrapper(admin.FieldListFilter):
+        def __new__(cls, *args, **kwargs):
+            instance = admin.FieldListFilter.create(*args, **kwargs)
+            instance.title = title
+            return instance
+    return (name, ListFilterWrapper)

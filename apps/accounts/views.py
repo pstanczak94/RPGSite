@@ -135,7 +135,7 @@ class EmailVerificationView(CustomFormView):
 
     def get_initial(self):
         data = super(EmailVerificationView, self).get_initial()
-        data['username'] = self.get_username()
+        data['name'] = self.get_username()
         data['activation_key'] = self.request.GET.get('key', '')
         return data
 

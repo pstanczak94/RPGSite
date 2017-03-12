@@ -225,7 +225,6 @@ class EmailVerificationForm(CustomModelForm):
         except Account.DoesNotExist:
             self.add_error(None, _('Account doesn\'t exist, verification failed.'))
         else:
-            self.instance = account
             if account.email_activated:
                 self.add_error(None, _('Your email is already activated.'))
             elif not account.email_activation_key or not account.email_key_expires:
@@ -234,5 +233,7 @@ class EmailVerificationForm(CustomModelForm):
                 self.add_error(None, _('Email verification time expired.'))
             elif account.email_activation_key != activation_key:
                 self.add_error(None, _('Verification key is wrong.'))
+            else:
+                self.instance = account
 
         return self.cleaned_data

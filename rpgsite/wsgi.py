@@ -20,15 +20,15 @@ from rpgsite.tools import GetSetting
 if GetSetting('CREATE_ROOT_ON_INIT', True):
     from apps.accounts.models import Account
     from rpgsite.tools import LogError, LogInfo
-    if not Account.objects.name_exists('root'):
+    if not Account.objects.name_exists('admin'):
         try:
             account = Account.objects.create_admin(
-                name = 'root',
+                name = 'admin',
                 password = 'rpgsite',
-                email = 'root@rpgsite.pl',
+                email = 'admin@rpgsite.pl',
             )
             account.players.create(
-                name = 'God Caday',
+                name = 'Caday',
                 group_id = '3', # God
                 lookbody = 101,
                 lookfeet = 94,
