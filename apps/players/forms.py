@@ -81,6 +81,7 @@ class StatsForm(forms.Form):
             ('druid', _('Druid')),
         ),
         widget = forms.Select(),
+        required = False,
     )
 
     sortby = forms.ChoiceField(
@@ -90,6 +91,7 @@ class StatsForm(forms.Form):
             ('name', _('Name')),
         ),
         widget = forms.Select(),
+        required = False,
     )
 
     order = forms.ChoiceField(
@@ -99,6 +101,7 @@ class StatsForm(forms.Form):
             ('asc', _('Ascending')),
         ),
         widget = forms.Select(),
+        required = False,
     )
 
     def clean(self):
