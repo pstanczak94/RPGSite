@@ -168,8 +168,6 @@ CHARACTER_NAME_REGEX = r'^[a-zA-Z ]+$'
 
 # Accounts
 
-# AUTH_USER_MODEL = 'accounts.Account'
-
 import datetime
 
 EMAIL_VERIFICATION_TIME = datetime.timedelta(days=2)
@@ -177,7 +175,28 @@ EMAIL_VERIFICATION_TIME = datetime.timedelta(days=2)
 MAX_PLAYERS_PER_ACCOUNT = 4
 
 # Create root account and player
+
 CREATE_ROOT_ON_INIT = True
+
+# RPGSite settings
+
+STATS_RECORDS_LIMIT = 20
+
+# forgottenserver integration
+
+from django.utils.translation import ugettext_lazy as _
+
+VOCATIONS = (
+    ('0', 'none', _('None')),
+    ('1', 'sorcerer', _('Sorcerer')),
+    ('2', 'druid', _('Druid')),
+    ('3', 'paladin', _('Paladin')),
+    ('4', 'knight', _('Knight')),
+    ('5', 'mastersorcerer', _('Master Sorcerer')),
+    ('6', 'elderdruid', _('Elder Druid')),
+    ('7', 'royalpaladin', _('Royal Paladin')),
+    ('8', 'eliteknight', _('Elite Knight')),
+)
 
 # Login and logout
 

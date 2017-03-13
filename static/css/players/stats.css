@@ -5,3 +5,20 @@
 .players-tr > td {
 	text-align: left;
 }
+
+#stats-filters {
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+.stats-filter-div {
+    float: left;
+}
+
+.stats-filter-div:not(:first-child) {
+    margin-left: 10px;
+}
+
+.stats-filters-end {
+    clear: both;
+}

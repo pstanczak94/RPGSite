@@ -7,24 +7,45 @@
 {% block content %}
 	{% link_static_css 'css/players/stats.css' %}
 
-    <table class="table table-hover table-striped players-table">
-        <tr>
-            <th>Name</th>
-            <th>Level</th>
-            <th>Sex</th>
-            <th>Vocation</th>
-            <th>Town</th>
-        </tr>
-    {% for player in object_list %}
-        <tr class="players-tr">
-            <td>{{ player.name }}</td>
-            <td>{{ player.level }}</td>
-            <td>{{ player.get_sex_display }}</td>
-            <td>{{ player.get_vocation_display }}</td>
-            <td>{{ player.get_town_id_display }}</td>
-        </tr>
-    {% empty %}
-        <tr><td colspan="10">No players yet.</td></tr>
-    {% endfor %}
-    </table>
+    <form action="" method="get">
+        <div id="stats-filters">
+
+            {% for field in form.visible_fields %}
+                <div class="stats-filter-div">
+                    <span>{{ field.label_tag }}</span> {{ field }}
+                </div>
+            {% endfor %}
+
+            <div class="stats-filter-div">
+                <input class="btn btn-xs btn-primary" type="submit" value="Filter">
+            </div>
+
+            <div class="stats-filters-end"></div>
+
+        </div>
+    </form>
+
+    <div id="stats-table">
+        <table class="table table-hover table-striped players-table">
+            <tr>
+                <th>Name</th>
+                <th>Level</th>
+                <th>Sex</th>
+                <th>Vocation</th>
+                <th>Town</th>
+            </tr>
+        {% for player in players %}
+            <tr class="players-tr">
+                <td>{{ player.name }}</td>
+                <td>{{ player.level }}</td>
+                <td>{{ player.get_sex_display }}</td>
+                <td>{{ player.get_vocation_display }}</td>
+                <td>{{ player.get_town_id_display }}</td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="10">No players yet.</td></tr>
+        {% endfor %}
+        </table>
+    </div>
+
 {% endblock %}

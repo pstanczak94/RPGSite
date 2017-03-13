@@ -11,7 +11,6 @@ from django.core.validators import RegexValidator
 
 from rpgsite.tools import GetSetting
 
-
 def character_name_fixer(name):
     name = name.strip()
     name = re.sub('\s+', ' ', name)
@@ -70,3 +69,38 @@ class CreateForm(forms.ModelForm):
         
         return data
 
+class StatsForm(forms.Form):
+
+    vocation = forms.ChoiceField(
+        label = _('Vocation'),
+        choices = (
+            ('all', _('All')),
+            ('knight', _('Knight')),
+            ('paladin', _('Paladin')),
+            ('sorcerer', _('Sorcerer')),
+            ('druid', _('Druid')),
+        ),
+        widget = forms.Select(),
+    )
+
+    sortby = forms.ChoiceField(
+        label = _('Sort by'),
+        choices = (
+            ('level', _('Level')),
+            ('name', _('Name')),
+        ),
+        widget = forms.Select(),
+    )
+
+    order = forms.ChoiceField(
+        label = _('Order'),
+        choices = (
+            ('desc', _('Descending')),
+            ('asc', _('Ascending')),
+        ),
+        widget = forms.Select(),
+    )
+
+    def clean(self):
+        super(StatsForm, self).clean()
+        return self.cleaned_data
