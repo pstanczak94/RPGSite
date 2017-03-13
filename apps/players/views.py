@@ -114,10 +114,13 @@ class StatsView(django_views.FormView):
         if vocation_id:
             players = players.filter(vocation=vocation_id)
 
-        players = players.order_by(sort_by_prefix + sort_by)
+        if sort_by:
+            players = players.order_by(sort_by_prefix + sort_by)
 
-        if sort_by != 'name':
-            players = players.order_by('name')
+            if sort_by != 'name':
+                players = players.order_by('name')
+        else:
+            players = players.order_by('-level', 'name')
 
         return self.render_view(form, players)
 
