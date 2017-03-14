@@ -181,12 +181,13 @@ CREATE_ROOT_ON_INIT = True
 # RPGSite settings
 
 STATS_RECORDS_LIMIT = 20
+STATS_DEFAULT_ORDER = ['-level', 'name']
 
 # forgottenserver integration
 
 from django.utils.translation import ugettext_lazy as _
 
-VOCATIONS = (
+VOCATION_INFO = (
     ('0', 'none', _('None')),
     ('1', 'sorcerer', _('Sorcerer')),
     ('2', 'druid', _('Druid')),
@@ -196,6 +197,11 @@ VOCATIONS = (
     ('6', 'elderdruid', _('Elder Druid')),
     ('7', 'royalpaladin', _('Royal Paladin')),
     ('8', 'eliteknight', _('Elite Knight')),
+)
+
+SEX_INFO = (
+    ('0', 'female', _('Female')),
+    ('1', 'male', _('Male')),
 )
 
 # Login and logout

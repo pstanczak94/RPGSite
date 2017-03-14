@@ -6,8 +6,8 @@
 	text-align: left;
 }
 
-#stats-filters {
-    margin-bottom: 20px;
+.stats-filters {
+    margin-bottom: 10px;
     display: inline-block;
 }
 

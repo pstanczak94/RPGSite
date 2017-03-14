@@ -84,6 +84,17 @@ class StatsForm(forms.Form):
         required = False,
     )
 
+    sex = forms.ChoiceField(
+        label=_('Sex'),
+        choices=(
+            ('all', _('All')),
+            ('male', _('Male')),
+            ('female', _('Female')),
+        ),
+        widget=forms.Select(),
+        required=False,
+    )
+
     sortby = forms.ChoiceField(
         label = _('Sort by'),
         choices = (
@@ -103,7 +114,3 @@ class StatsForm(forms.Form):
         widget = forms.Select(),
         required = False,
     )
-
-    def clean(self):
-        super(StatsForm, self).clean()
-        return self.cleaned_data

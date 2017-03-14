@@ -20,6 +20,13 @@ def StringCrop(text, max_len):
     else:
         return text
 
+def ChoiceTextToID(text, choices):
+    for choice in choices:
+        if choice[1] == text:
+            return choice[0]
+
+    return None
+
 from django.utils import timezone
 
 def GetCurrentTimestamp():

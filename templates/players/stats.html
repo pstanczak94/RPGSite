@@ -8,12 +8,26 @@
 	{% link_static_css 'css/players/stats.css' %}
 
     <form action="" method="get">
-        <div id="stats-filters">
-
+        <div class="stats-filters">
             {% for field in form.visible_fields %}
-                <div class="stats-filter-div">
-                    <span>{{ field.label_tag }}</span> {{ field }}
-                </div>
+                {% if forloop.counter <= 2 %}
+                    <div class="stats-filter-div">
+                        <span>{{ field.label_tag }}</span> {{ field }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <div class="stats-filters-end"></div>
+        </div>
+
+        <div></div>
+
+        <div class="stats-filters">
+            {% for field in form.visible_fields %}
+                {% if forloop.counter >= 3 %}
+                    <div class="stats-filter-div">
+                        <span>{{ field.label_tag }}</span> {{ field }}
+                    </div>
+                {% endif %}
             {% endfor %}
 
             <div class="stats-filter-div">
@@ -21,7 +35,6 @@
             </div>
 
             <div class="stats-filters-end"></div>
-
         </div>
     </form>
 
@@ -43,9 +56,13 @@
                 <td>{{ player.get_town_id_display }}</td>
             </tr>
         {% empty %}
-            <tr><td colspan="10">No players yet.</td></tr>
+            <tr><td colspan="10">Nothing to show.</td></tr>
         {% endfor %}
         </table>
+    </div>
+
+    <div>
+        <p>Showing {{ players_count }} players out of {{ total_players }} total players.</p>
     </div>
 
 {% endblock %}

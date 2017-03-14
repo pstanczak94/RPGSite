@@ -3,7 +3,7 @@ from django.views.generic.base import RedirectView
 
 from apps.players.forms import StatsForm
 from apps.tools.views import CustomFormView
-from rpgsite.tools import GetSetting
+from rpgsite.tools import GetSetting, ChoiceTextToID
 from .forms import CreateForm
 
 from django.views import generic as django_views
@@ -62,24 +62,22 @@ class DeleteView(LoginRequiredMixin, django_views.DeleteView):
         self._check_player(request)
         return super(DeleteView, self).delete(request, *args, **kwargs)
 
-def VocationTextToID(text):
-    for choice in GetSetting('VOCATIONS'):
-        if choice[1] == text:
-            return choice[0]
-    return None
-
 class StatsView(django_views.FormView):
     form_class = StatsForm
     template_name = 'players/stats.html'
 
     def render_view(self, form, players):
         # ustawiamy limit wyświetlanych rekordów
+        total_players = players.count()
         players = players[:GetSetting('STATS_RECORDS_LIMIT', 20)]
+        players_count = players.count()
 
         return self.render_to_response(
             self.get_context_data(
                 form=form,
                 players=players,
+                players_count=players_count,
+                total_players=total_players,
             )
         )
 
@@ -92,7 +90,7 @@ class StatsView(django_views.FormView):
         # gdy nie został naciśnięty przycisk filtrowania
         # lub próbujemy podać ręcznie niewłaściwe dane
 
-        players = Player.objects.order_by('-level', 'name')
+        players = Player.objects.order_by(*GetSetting('STATS_DEFAULT_ORDER'))
         return self.render_view(form, players)
 
     def get_form_kwargs(self):
@@ -102,10 +100,12 @@ class StatsView(django_views.FormView):
 
     def form_valid(self, form):
         vocation = form.cleaned_data.get('vocation')
+        sex = form.cleaned_data.get('sex')
         sort_by = form.cleaned_data.get('sortby')
         sort_mode = form.cleaned_data.get('order')
 
-        vocation_id = VocationTextToID(vocation)
+        vocation_id = ChoiceTextToID(vocation, GetSetting('VOCATION_INFO'))
+        sex_id = ChoiceTextToID(sex, GetSetting('SEX_INFO'))
 
         sort_by_prefix = '-' if sort_mode == 'desc' else ''
 
@@ -114,13 +114,18 @@ class StatsView(django_views.FormView):
         if vocation_id:
             players = players.filter(vocation=vocation_id)
 
+        if sex_id:
+            players = players.filter(sex=sex_id)
+
         if sort_by:
-            players = players.order_by(sort_by_prefix + sort_by)
+            order_options = [sort_by_prefix + sort_by]
 
             if sort_by != 'name':
-                players = players.order_by('name')
+                order_options.append('name')
         else:
-            players = players.order_by('-level', 'name')
+            order_options = GetSetting('STATS_DEFAULT_ORDER')
+
+        players = players.order_by(*order_options)
 
         return self.render_view(form, players)
 
