@@ -1,6 +1,6 @@
-##Projekt RPGSite
+## Projekt RPGSite
 
-####O projekcie
+#### O projekcie
 
 Projekt RPGSite to stworzenie aplikacji webowej w popularnym frameworku 
 webowym [Django](https://www.djangoproject.com) opierającym się na języku programowania 
@@ -8,14 +8,14 @@ Python. Zamysłem autora jest stworzenie unikalnego designu od podstaw dzięki
 znajomości takich języków jak HTML, CSS, JavaScript i oczywiście Python. 
 Interfejs ma być przejrzysty, intuicyjny oraz funkcjonalny.
 
-####Zastosowanie
+#### Zastosowanie
 
 Projekt może być wykorzystany jako (często niezbędny) dodatek do serwera gry, 
 który będzie stanowił bogaty interfejs. Założeniem autora jest osiągnięcie 
 kompatybilności z przynajmniej jednym takim serwerem, którym najprawdopodobniej 
 będzie [forgottenserver](https://github.com/otland/forgottenserver). 
 
-####Cel projektu
+#### Cel projektu
 
 Zadaniem aplikacji webowej będzie stworzenie przyjaznego dla użytkownika 
 środowiska, które będzie udostępniało następujące funkcjonalności:
@@ -29,7 +29,7 @@ Zadaniem aplikacji webowej będzie stworzenie przyjaznego dla użytkownika
 - Możliwość zarządzania przez administratorów wszystkimi obiektami bazy danych gry w prosty, łatwy i przyjemny sposób
 - Inne, na które autor jeszcze nie wpadł
 
-####Harmonogram pracy
+#### Harmonogram pracy
 
 - Tydzień 1 - stworzenie podstawowego szkieletu strony
 - Tydzień 2 - dodanie możliwości tworzenia konta oraz autoryzowanego dostępu użytkowników
@@ -39,7 +39,7 @@ Zadaniem aplikacji webowej będzie stworzenie przyjaznego dla użytkownika
 - Tydzień 6 - praca nad doskonaleniem interfejsu użytkownika, dodanie dynamicznych przejść między kolejnymi etapami tworzenia postaci
 - Tydzień 7 - szukanie błędów w kodzie, poprawki błędów i ostateczne domknięcie projektu
 
-####Jakie biblioteki zostały użyte?
+#### Jakie biblioteki zostały użyte?
 
 - _**django** (1.10.5)_
 - _**pytz** (2016.10)_
@@ -55,20 +55,20 @@ Aby zainstalować wszystkie biblioteki wystarczy użyć polecenia
 pip install -r requirements.txt
 ```
 
-####Preferowana wersja pythona?
+#### Preferowana wersja pythona?
 
 ```
 Python 3.6.0 [32 bit]
 ```
 
-####Jak stworzyć bazę danych MySQL?
+#### Jak stworzyć bazę danych MySQL?
 
 ```
 DROP DATABASE IF EXISTS `rpgsite`;
 CREATE DATABASE `rpgsite` DEFAULT CHAR SET utf8;
 ```
 
-####Jak uruchomić serwer?
+#### Jak uruchomić serwer?
 
 Dodanie pythona do PATH
 
@@ -86,8 +86,6 @@ python.exe manage.py collectstatic
 python.exe manage.py runserver 0.0.0.0:80
 ```
 
-
 Aby poprawnie uruchomić serwer należy utworzyć folder `secret` w głównym folderze projektu.
 
 Natomiast w folderze `secret` dwa kolejne foldery - `database` oraz `logs`.
-
