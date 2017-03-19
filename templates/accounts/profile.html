@@ -80,17 +80,24 @@
 								<td><a 	id="delete-character-link"
 										class="glyphicon glyphicon-remove" 
 										href="{% url 'players:delete' player.pk %}" 
-										title="{% trans "Delete character" %}"
+										title="Delete character"
 										onclick="event.stopPropagation();"></a></td>
 							</tr>
 							<tr class="characters-extra">
-								<td colspan="10">
+								<td class="characters-extra-td" colspan="10">
 									<div>
-										{% if player.guild %}
-											<p>{% trans "Guild" %}: {{ player.guild.name }}</p>
+										{% if player.get_guild %}
+											<p class="character-add-info">
+												<strong>{% trans "Guild" %}:</strong>
+												{{ player.get_guild.name }}
+												({{ player.get_guild_rank }})
+											</p>
 										{% endif %}
 										{% if player.house_owner %}
-											<p>{% trans "House" %}: {{ player.house_owner.name }}</p>
+											<p class="character-add-info">
+												<strong>{% trans "House" %}:</strong>
+												{{ player.house_owner.name }}
+											</p>
 										{% endif %}
 									</div>
 								</td>

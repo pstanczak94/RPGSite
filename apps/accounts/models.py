@@ -95,10 +95,12 @@ class Account(models.Model):
     creation = models.IntegerField(
         _('creation timestamp'),
         default = GetCurrentTimestamp,
+        editable = False,
     )
 
     def get_creation_display(self):
-        return str(datetime.fromtimestamp(self.creation))
+        return datetime.fromtimestamp(self.creation)
+
     get_creation_display.short_description = _('date created')
 
     access = models.IntegerField(

@@ -42,12 +42,21 @@ h1 { margin-top: 10px; margin-bottom: 20px; }
 }
 
 .characters-extra {
+    background-color: #ffffb3;
 	display: none;
-	padding: 0;
 }
 
-.characters-extra > td {
-	padding: 0;
+.characters-extra-td:hover {
+    background-color: #ccffe6;
+}
+
+.character-add-info {
+    text-align: left;
+    margin: 0px;
+}
+
+.character-add-info:not(:first-child) {
+    margin-top: 5px;
 }
 
 #delete-character-link:link, #delete-character-link:visited {

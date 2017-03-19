@@ -91,10 +91,12 @@ class Player(models.Model):
 
     creation = models.IntegerField(
         default = GetCurrentTimestamp,
+        editable = False,
     )
 
     def get_creation_display(self):
-        return str(datetime.fromtimestamp(self.creation))
+        return datetime.fromtimestamp(self.creation)
+
     get_creation_display.short_description = _('date created')
 
     level = models.IntegerField(
@@ -211,6 +213,12 @@ class Player(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_guild(self):
+        return self.guildmembership.guild
+
+    def get_guild_rank(self):
+        return self.guildmembership.rank
 
     # def check_is_banned(self):
     #     for ban in self.banned_player.filter(active=True):

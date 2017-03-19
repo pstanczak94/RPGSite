@@ -328,3 +328,9 @@ td {
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px rgba(255, 50, 50, .6);
             box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 5px rgba(255, 50, 50, .6);
 }
+
+/* RPGSite classes */
+
+.nomargin {
+    margin: 0px !important;
+}

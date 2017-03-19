@@ -1,52 +1,50 @@
+from datetime import datetime
 from django.db import models
 from django.utils import timezone
 from django.db.models.signals import pre_delete, post_save
 from django.dispatch.dispatcher import receiver
 from django.utils.translation import ugettext_lazy as _
 
-# @receiver(pre_delete)
-# def guild_pre_delete(sender, instance, **kwargs):
-#     if sender == Guild:
-#
-#         for player in instance.player_set.all():
-#             player.guild_nick = ''
-#
-# default_guild_ranks = (
-#     {'name': 'the Leader', 'level': 3},
-#     {'name': 'a Vice-Leader', 'level': 2},
-#     {'name': 'a Member', 'level': 1},
-# )
-#
-# @receiver(post_save)
-# def guild_post_save(sender, instance, created, **kwargs):
-#     if sender == Guild and created:
-#
-#         for guildrank in default_guild_ranks:
-#             instance.guildrank_set.create(**guildrank)
-#
-#         if instance.owner:
-#             instance.owner.guild = instance
-#             instance.owner.guild_rank = instance.guildrank_set.get(name='Leader')
-#             instance.owner.save()
+from rpgsite.tools import GetCurrentTimestamp
+
+@receiver(post_save)
+def guild_post_save(sender, instance, created, **kwargs):
+    if sender == Guild and created:
+        GuildMembership.objects.create(
+            player = instance.owner,
+            guild = instance,
+            rank = instance.ranks.get(level = 3),
+            nick = _('The creator'),
+        )
 
 class Guild(models.Model):
-
-    name = models.CharField(max_length=30, unique=True)
+    name = models.CharField(
+        max_length = 255,
+        unique = True,
+    )
 
     owner = models.OneToOneField(
-        'players.Player', 
-        null = True, 
-        blank = True, 
-        on_delete = models.SET_NULL,
-        related_name = 'guild_owner',
+        'players.Player',
+        on_delete = models.DO_NOTHING,
+        related_name = 'ownedguild',
         db_column = 'ownerid',
     )
 
-    creationdata = models.DateTimeField(
-        default = timezone.now,
+    created = models.IntegerField(
+        default = GetCurrentTimestamp,
+        db_column = 'creationdata',
+        editable = False,
     )
 
-    motd = models.CharField(max_length=100, default='')
+    def get_created_display(self):
+        return datetime.fromtimestamp(self.created)
+
+    get_created_display.short_description = _('date created')
+
+    motd = models.CharField(
+        max_length = 255,
+        blank = True,
+    )
 
     class Meta:
         managed = False
@@ -55,41 +53,67 @@ class Guild(models.Model):
     def __str__(self):
         return self.name
 
-    @property
-    def get_owner_name(self):
-        return self.owner.name if self.owner else 'nobody'
-
 class GuildRank(models.Model):
-    guild = models.ForeignKey('guilds.Guild', models.CASCADE)
-    name = models.CharField(max_length=30)
-    level = models.PositiveSmallIntegerField()
+    guild = models.ForeignKey(
+        'guilds.Guild',
+        models.DO_NOTHING,
+        related_name = 'ranks',
+    )
+
+    name = models.CharField(
+        max_length = 255,
+    )
+
+    level = models.IntegerField()
 
     class Meta:
         managed = False
         db_table = 'guild_ranks'
-        unique_together = (('guild', 'name'),)
 
     def __str__(self):
         return self.name
 
+class GuildMembership(models.Model):
+    player = models.OneToOneField(
+        'players.Player',
+        models.DO_NOTHING,
+        primary_key = True,
+    )
+
+    guild = models.ForeignKey(
+        'guilds.Guild',
+        models.DO_NOTHING,
+    )
+
+    rank = models.ForeignKey(
+        'guilds.GuildRank',
+        models.DO_NOTHING,
+    )
+
+    nick = models.CharField(
+        max_length = 15,
+        blank = True,
+    )
+
+    class Meta:
+        managed = False
+        db_table = 'guild_membership'
+
 class GuildInvite(models.Model):
-    player = models.ForeignKey('players.Player', models.CASCADE)
-    guild = models.ForeignKey('guilds.Guild', models.CASCADE)
+    player = models.ForeignKey(
+        'players.Player',
+        models.DO_NOTHING,
+    )
+
+    guild = models.ForeignKey(
+        'guilds.Guild',
+        models.DO_NOTHING,
+    )
 
     class Meta:
         managed = False
         db_table = 'guild_invites'
         unique_together = (('player', 'guild'),)
-
-class GuildMembership(models.Model):
-    player = models.OneToOneField('players.Player', models.CASCADE, primary_key=True)
-    guild = models.ForeignKey('guilds.Guild', models.CASCADE)
-    rank = models.ForeignKey('guilds.GuildRank', models.CASCADE)
-    nick = models.CharField(max_length=15, default='')
-
-    class Meta:
-        managed = False
-        db_table = 'guild_membership'
 
 class GuildWar(models.Model):
     guild1 = models.IntegerField(default=0)
