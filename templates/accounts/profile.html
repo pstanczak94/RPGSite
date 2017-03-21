@@ -123,4 +123,8 @@
 	<a href="{% url 'accounts:password' %}">
 		<input type="button" class="btn btn-primary" value="{% trans "Change password" %}" />
 	</a>
+
+	<a href="{% url 'guilds:create' %}">
+		<input type="button" class="btn btn-danger" value="{% trans "Create guild" %}" />
+	</a>
 {% endblock %}

@@ -23,6 +23,6 @@ echo.
 echo  -^> runserver...
 echo.
 
-cmd /c %~dp0\usepython.bat %~dp0\manage.py runserver
+cmd /c %~dp0\usepython.bat %~dp0\manage.py runserver 80
 
 echo.

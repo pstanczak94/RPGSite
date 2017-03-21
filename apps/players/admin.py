@@ -59,7 +59,7 @@ class PlayerAdmin(admin.ModelAdmin):
     )
 
     search_fields = (
-        'name', 'last_ip', 'account__name', 'account__email',
+        'name', 'lastip', 'account__name', 'account__email',
     )
 
     ordering = (

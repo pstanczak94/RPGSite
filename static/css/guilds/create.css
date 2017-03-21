@@ -1,0 +1,48 @@
+table {
+    min-width: 400px;
+    max-width: 500px;
+    border-collapse: collapse;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+th {
+    text-align: right;
+}
+
+td {
+    vertical-align: middle;
+    padding: 5px;
+    text-align: left;
+}
+
+.control-label {
+    margin: 0;
+}
+
+input[type=submit] {
+    padding: 5px 30px;
+}
+
+.errortd .field-error-list {
+    margin-bottom: 10px;
+}
+
+.help-block {
+    text-align: center;
+    margin: 0;
+}
+
+hr {
+    margin: 10px 0px;
+}
+
+.help-block-icon {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.help-block-text {
+    display: inline-block;
+    text-align: left;
+}

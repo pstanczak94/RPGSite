@@ -183,14 +183,14 @@ class Player(models.Model):
     lastlogout = models.BigIntegerField(default=0)
     lastip = models.IntegerField(default=0)
     save_on_logout = models.BooleanField(default=True, db_column='save')
-    stamina = models.SmallIntegerField(default=2520)
+    stamina = models.IntegerField(default=2520)
     skull = models.BooleanField(default=False)
     skulltime = models.IntegerField(default=0)
     balance = models.PositiveIntegerField(default=0)
     blessings = models.IntegerField(default=0)
     onlinetime = models.IntegerField(default=0)
     deletion = models.BigIntegerField(default=0)
-    offlinetraining_time = models.SmallIntegerField(default=43200)
+    offlinetraining_time = models.IntegerField(default=43200)
     offlinetraining_skill = models.IntegerField(default=-1)
     skill_fist = models.IntegerField(default=10)
     skill_fist_tries = models.BigIntegerField(default=0)
@@ -278,8 +278,8 @@ class PlayerDepotItem(models.Model):
     player = models.ForeignKey('players.Player', models.CASCADE)
     sid = models.IntegerField()
     pid = models.IntegerField()
-    itemtype = models.SmallIntegerField()
-    count = models.SmallIntegerField()
+    itemtype = models.IntegerField()
+    count = models.IntegerField()
     attributes = models.TextField()
 
     class Meta:
@@ -291,8 +291,8 @@ class PlayerInboxItem(models.Model):
     player = models.ForeignKey('players.Player', models.CASCADE)
     sid = models.IntegerField()
     pid = models.IntegerField()
-    itemtype = models.SmallIntegerField()
-    count = models.SmallIntegerField()
+    itemtype = models.IntegerField()
+    count = models.IntegerField()
     attributes = models.TextField()
 
     class Meta:
@@ -304,8 +304,8 @@ class PlayerItem(models.Model):
     player = models.ForeignKey('players.Player', models.CASCADE)
     pid = models.IntegerField()
     sid = models.IntegerField()
-    itemtype = models.SmallIntegerField()
-    count = models.SmallIntegerField()
+    itemtype = models.IntegerField()
+    count = models.IntegerField()
     attributes = models.TextField()
 
     class Meta:

@@ -1,11 +1,13 @@
 from datetime import datetime
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
 from django.db.models.signals import pre_delete, post_save
 from django.dispatch.dispatcher import receiver
 from django.utils.translation import ugettext_lazy as _
 
-from rpgsite.tools import GetCurrentTimestamp
+from rpgsite.tools import GetCurrentTimestamp, CaseInsensitiveKwargs
 
 @receiver(post_save)
 def guild_post_save(sender, instance, created, **kwargs):
@@ -17,7 +19,24 @@ def guild_post_save(sender, instance, created, **kwargs):
             nick = _('The creator'),
         )
 
+class GuildManager(models.Manager):
+    def filter(self, **kwargs):
+        kwargs = CaseInsensitiveKwargs('name', **kwargs)
+        return super(GuildManager, self).filter(**kwargs)
+
+    def get(self, **kwargs):
+        kwargs = CaseInsensitiveKwargs('name', **kwargs)
+        return super(GuildManager, self).get(**kwargs)
+
+    def get_by_natural_key(self, name):
+        return self.get(name=name)
+
+    def name_exists(self, name):
+        return self.get_queryset().filter(name=name).exists()
+
 class Guild(models.Model):
+    objects = GuildManager()
+
     name = models.CharField(
         max_length = 255,
         unique = True,

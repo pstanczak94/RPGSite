@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content-title %}
+	{{ view.get_title }}
+{% endblock %}
+
+{% block content %}
+	{% link_static_css 'css/guilds/create.css' %}
+
+	{% if view.is_success %}
+		<div class="text-center">
+			<h2>Guild {{ name }} created!</h2>
+		<br/>
+		{% include 'redirect_feature.html' %}
+		</div>
+	{% else %}
+		{% include 'forms/form_errors.html' %}
+
+		<form action="" method="post">
+			{% csrf_token %}
+
+			<table>
+				{% for field in form.visible_fields %}
+				    {% if not forloop.first %}
+                        <tr><td colspan="10"><hr/></td></tr>
+                    {% endif %}
+					{% if field.errors %}
+						<tr><td class="errortd" colspan="2">{% include 'forms/field_errors.html' %}</td></tr>
+					{% endif %}
+					<tr>
+						<th>{{ field | bootstrap_label }}</th>
+						<td>{{ field | bootstrap_input }}</td>
+					</tr>
+					{% if field.help_text %}
+                        <tr>
+                            <td colspan="10">
+                                <div class="help-block">
+                                    <div class="help-block-icon">
+                                        <span class="glyphicon glyphicon-info-sign"></span>
+                                    </div>
+                                    <div class="help-block-text">
+                                        {{ field.help_text | linebreaksbr | safe }}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+					{% endif %}
+				{% endfor %}
+			</table>
+
+			<input class="btn btn-success" type="submit" value="Create guild">
+		</form>
+	{% endif %}
+{% endblock %}

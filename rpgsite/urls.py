@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^accounts/', include('apps.accounts.urls')),
     url(r'^players/', include('apps.players.urls')),
+    url(r'^guilds/', include('apps.guilds.urls')),
     url(r'^administration/', admin.site.urls),
     url(r'^emoji/', include('emoji.urls')),
     url(r'^favicon\.ico$', views.FaviconView.as_view()),
