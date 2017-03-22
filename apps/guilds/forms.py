@@ -22,7 +22,7 @@ GuildOwnerMinLevel = 50
 
 GuildNameHelpText = _(
     'Guild name needs to be from {min} to {max} characters length.\n'
-    'Only english characters are allowed.'
+    'Only english characters and spaces are allowed.'
 ).format(
     min = GuildNameMinLength,
     max = GuildNameMaxLength,
@@ -35,13 +35,9 @@ class CreateForm(CustomModelForm):
 
     owner = ModelChoiceField(
         label = _('Guild owner'),
-        help_text = _('Must have at least {min} level.').format(min=GuildOwnerMinLevel),
+        help_text = _('Guild owner must have at least {min} level.').format(min=GuildOwnerMinLevel),
         queryset = None,
-        widget = Select(
-            attrs = {
-                'class': 'form-control',
-            }
-        )
+        widget = Select(attrs = {'class':'form-control'}),
     )
 
     name = CharField(
@@ -56,14 +52,14 @@ class CreateForm(CustomModelForm):
         super(CreateForm, self).__init__(*args, **kwargs)
         self.fields['owner'].queryset = account.players
 
-    def clean(self):
-        super(CreateForm, self).clean()
+    def clean_owner(self):
+        owner = self.cleaned_data.get('owner')
 
-        if self.is_valid():
-            name = self.cleaned_data.get('name')
-            owner = self.cleaned_data.get('owner')
+        if owner.level < GuildOwnerMinLevel:
+            self.add_error('owner', _(
+                'Player must have {min} level to create guild.'
+            ).format(
+                min = GuildOwnerMinLevel
+            ))
 
-            if owner.level < GuildOwnerMinLevel:
-                self.add_error('owner', _('Player must have {min} level to create guild.').format(min=GuildOwnerMinLevel))
-
-        return self.cleaned_data
+        return owner

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content-title %}
+	Delete guild
+{% endblock %}
+
+{% block content %}
+	{% link_static_css 'css/guilds/delete.css' %}
+	
+	<form action="" method="post">
+		{% csrf_token %}
+		
+	    <p>Are you sure you want to delete this guild? {% emoji 'goberserk' %}</p>
+	    
+	    <h2>
+	    	<code><strong>Guild name:</strong> {{ object.name }}</code>
+	    </h2>
+	    
+	    <br>
+	    
+	    <input class="btn btn-sm btn-danger" type="submit" value="Delete guild" />
+	    <input class="btn btn-sm btn-default" type="button" value="Cancel" onclick="history.go(-1); return false;" />
+	</form>
+{% endblock %}

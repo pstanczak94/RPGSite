@@ -220,6 +220,10 @@ class Player(models.Model):
     def get_guild_rank(self):
         return self.guildmembership.rank
 
+    def is_guild_owner(self):
+        return self.ownedguild and self.guildmembership and \
+               self.ownedguild == self.guildmembership.guild
+
     # def check_is_banned(self):
     #     for ban in self.banned_player.filter(active=True):
     #         if ban.permament or not ban.has_expired:

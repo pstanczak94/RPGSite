@@ -12,7 +12,7 @@
 	<script type="text/javascript">
 	<!--
 		$(document).ready(function() {
-			$('.characters-tr').click(function(){
+			$('.characters-table-row').click(function(){
 				$(this).next().fadeToggle();
 			});
 			$('.characters-extra > td > div').each(function() {
@@ -65,40 +65,47 @@
 				<div class="text-center">
 					<h1>{% trans "List of characters" %}</h1>
 					
-					<table class="table table-hover characters-table">
-						<tr>
+					<table class="characters-table">
+						<tr class="characters-table-header">
 							<th>{% trans "Name" %}</th>
 							<th>{% trans "Vocation" %}</th>
 							<th>{% trans "Level" %}</th>
 							<th></th>
 						</tr>
 						{% for player in players %}
-							<tr class="characters-tr" id="character-{{ forloop.counter }}">
+							<tr class="characters-table-row" id="character-{{ forloop.counter }}">
 								<td>{{ player.name }}</td>
 								<td>{{ player.get_vocation_display }}</td>
 								<td>{{ player.level }}</td>
-								<td><a 	id="delete-character-link"
-										class="glyphicon glyphicon-remove" 
+								<td><a 	class="glyphicon glyphicon-remove delete-character-link"
 										href="{% url 'players:delete' player.pk %}" 
 										title="Delete character"
 										onclick="event.stopPropagation();"></a></td>
 							</tr>
 							<tr class="characters-extra">
-								<td class="characters-extra-td" colspan="10">
-									<div>
+								<td class="characters-extra-td" colspan="4">
+									<div class="characters-extra-div">
+										<ul class="characters-extra-list">
 										{% if player.get_guild %}
-											<p class="character-add-info">
+											<li class="characters-extra-list-item">
 												<strong>{% trans "Guild" %}:</strong>
 												{{ player.get_guild.name }}
 												({{ player.get_guild_rank }})
-											</p>
+												{% if player.is_guild_owner %}
+													<a 	class="glyphicon glyphicon-remove delete-guild-link"
+														href="{% url 'guilds:delete' player.get_guild.pk %}"
+														title="Delete guild"
+														onclick="event.stopPropagation();"></a>
+												{% endif %}
+											</li>
 										{% endif %}
 										{% if player.house_owner %}
-											<p class="character-add-info">
+											<li class="characters-extra-list-item">
 												<strong>{% trans "House" %}:</strong>
 												{{ player.house_owner.name }}
-											</p>
+											</li>
 										{% endif %}
+										</ul>
 									</div>
 								</td>
 							</tr>

@@ -12,8 +12,8 @@ h1 { margin-top: 10px; margin-bottom: 20px; }
 .profile-table { width: 100%; }
 
 #profile-td-1 {
-    min-width: 100px;
-	max-width: 200px;
+    min-width: 200px;
+	max-width: 300px;
 	text-align: left;
 	border-right: 1px solid darkgray;
 	padding-right: var(--section-margin);
@@ -22,7 +22,7 @@ h1 { margin-top: 10px; margin-bottom: 20px; }
 .profile-td-container {
     white-space: nowrap;
     overflow: hidden;
-    -webkit-mask-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 1) 90%, rgba(0, 0, 0, 0) 100%);
+    -webkit-mask-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 1) 95%, rgba(0, 0, 0, 0) 100%);
 }
 
 #profile-td-2 {
@@ -30,42 +30,91 @@ h1 { margin-top: 10px; margin-bottom: 20px; }
 }
 
 .characters-table {
-	background-color: white;
+	width: 100%;
+	margin-bottom: 10px;
+	font-size: 14px;
+	font-family: Tahoma, sans-serif;
 }
 
-.characters-tr > td {
-	text-align: left;
+.characters-table-header {
+    background-color: #b3f198;
+	border: 2px solid green;
 }
 
-.characters-tr {
+.characters-table-header:hover {
+    background-color: #88cb6a;
+}
+
+.characters-table-header > th {
+    padding: 8px 10px;
+}
+
+.characters-table-row {
+    --border-style: 2px solid #05167b;
+	border-left: var(--border-style);
+	border-right: var(--border-style);
+	border-bottom: var(--border-style);
+    background-color: #1b3bff;
+    color: white;
+    font-weight: bold;
 	cursor: pointer;
 }
 
+.characters-table-row:hover {
+    background-color: #1029bf;
+}
+
+.characters-table-row > td {
+	text-align: left;
+	padding: 5px 10px;
+}
+
 .characters-extra {
+    --border-style: 2px solid orange;
+	border-left: var(--border-style);
+	border-right: var(--border-style);
+	border-bottom: var(--border-style);
     background-color: #ffffb3;
 	display: none;
 }
 
-.characters-extra-td:hover {
-    background-color: #ccffe6;
+.characters-extra:hover {
+    background-color: #e9ea8c;
 }
 
-.character-add-info {
+.characters-extra > td {
+	padding: 5px 10px;
+}
+
+.characters-extra-div {
     text-align: left;
-    margin: 0px;
 }
 
-.character-add-info:not(:first-child) {
-    margin-top: 5px;
+.characters-extra-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-#delete-character-link:link, #delete-character-link:visited {
+.characters-extra-list-item:before {
+    content: "★";
+}
+
+.delete-character-link:link,
+.delete-character-link:visited,
+.delete-guild-link:link,
+.delete-guild-link:visited
+{
 	color: red;
 	text-decoration: none;
 	text-shadow: 1px 1px 1px black;
 }
 
-#delete-character-link:hover, #delete-character-link:active {
+.delete-character-link:hover,
+.delete-character-link:active,
+.delete-guild-link:hover,
+.delete-guild-link:active
+{
 	color: maroon;
 	text-decoration: none;
 }
